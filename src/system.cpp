@@ -168,7 +168,7 @@ void myDisplay(void)
 	// First position it around the sun
 	//		Use DayOfYear to determine its position
 	glRotatef(360.0*DayOfYearMerc / 88, 0.0, 1.0, 0.0);
-	glTranslatef(1.5, 1.0, 0.0);
+	glTranslatef(1.5, 0.0, 0.0);
 	// Save matrix state
 	// Second, rotate the earth on its axis.
 	//		Use HourOfDay to determine its rotation.
