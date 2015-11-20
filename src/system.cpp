@@ -12,8 +12,7 @@ static GLenum singleStep = GL_FALSE;
 // These three variables control the animation's state and speed.
 static float HourOfDay = 0.0;
 static float DayOfYear = 0.0;
-static float DayOfMars = 1.0;
-static float AnimateIncrement = 24.0;  // Time step for animation (hours)
+static float AnimateIncrement = 1.0;  // Time step for animation (hours)
 
 /**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
  * Author:	Shawn Cramp
@@ -132,77 +131,76 @@ static void Key_down(void)
 
 
 //<<<<<<<<<<<<<<<<<<<<<<< myDisplay >>>>>>>>>>>>>>>>>
-void myDisplay(void) {
-
+void myDisplay(void) 
+{
 	// Clear the redering window
-	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	    if (spinMode) {
-			// Update the animation state
-	        HourOfDay += AnimateIncrement;
-	        DayOfYear += AnimateIncrement/24.0;
+	if (spinMode) {
+		// Update the animation state
+		HourOfDay += AnimateIncrement;
+		DayOfYear += AnimateIncrement / 24.0;
 
-	        DayOfMars += AnimateIncrement;
+		HourOfDay = HourOfDay - ((int)(HourOfDay / 24)) * 24;
+		DayOfYear = DayOfYear - ((int)(DayOfYear / 365)) * 365;
+	}
 
-	        HourOfDay = HourOfDay - ((int)(HourOfDay/24))*24;
-	        DayOfYear = DayOfYear - ((int)(DayOfYear/365))*365;
+	// Clear the current matrix (Modelview)
+	glLoadIdentity();
 
-	        DayOfMars = DayOfMars - ((int)(DayOfMars/500))*500;
-			}
+	// Back off eight units to be able to view from the origin.
+	glTranslatef(0.0, 0.0, -8.0);
 
-		// Clear the current matrix (Modelview)
-	    glLoadIdentity();
+	// Rotate the plane of the elliptic
+	// (rotate the model's plane about the x axis by fifteen degrees)
+	glRotatef(90.0, 1.0, 0.0, 0.0);
 
-		// Back off eight units to be able to view from the origin.
-	    glTranslatef ( 0.0, 0.0, -8.0 );
+	// Draw the sun	-- as a yellow, wireframe sphere
 
-		// Rotate the plane of the elliptic
-		// (rotate the model's plane about the x axis by fifteen degrees)
-		glRotatef( 90.0, 1.0, 0.0, 0.0 );
-
-	    // Draw the sun	-- as a yellow, wireframe sphere
-		glColor3f( 1.0, 1.0, 0.0 );
-	    glutWireSphere( 1.0, 15, 15 );
-
-	    // Draw the Earth
-		// First position it around the sun
-		//		Use DayOfYear to determine its position
-	    glRotatef( 360.0*DayOfYear/365.0, 0.0, 1.0, 0.0 );
-	    glTranslatef( 4.0, 0.0, 0.0 );
-	    glPushMatrix();						// Save matrix state
-		// Second, rotate the earth on its axis.
-		//		Use HourOfDay to determine its rotation.
-		glRotatef( 360.0*HourOfDay/24.0, 0.0, 1.0, 0.0 );
-		// Third, draw the earth as a wireframe sphere.
-	    glColor3f( 0.2, 0.2, 1.0 );
-	    glutWireSphere( 0.4, 10, 10);
-
-		// Draw the moon.
-		//	Use DayOfYear to control its rotation around the earth
-	   	glRotatef( 360.0*12*DayOfYear/365.0, 0.0, 1.0, 0.0 );
-	    glTranslatef( 0.7, 0.0, 0.0 );
-	    glColor3f( 0.3, 0.7, 0.3 );
-	    glutWireSphere( 0.1, 5, 5 );
-	    glPopMatrix();
-
-	    // Draw another planet
-
-	    glColor3f( 1.0, 0.0, 0.0 );
-	    glTranslatef( -2.0, 0.0, 0.0);
-	    glRotatef( 360.0*2*DayOfMars/500.0, 0.0, 1.0, 0.0 );
-	    glutWireSphere( 0.4, 15, 15);
+	glColor3f(1.0, 1.0, 0.0);
+	glutWireSphere(1.0, 15, 15);
 
 
+	// Draw the Earth1
+	glPushMatrix();
+	// First position it around the sun
+	//		Use DayOfYear to determine its position
+	glRotatef(220.0*DayOfYear / 220, 0.0, 1.0, 0.0);
+	glTranslatef(1.5, 0.0, 0.0);
+	// Save matrix state
+	// Second, rotate the earth on its axis.
+	//		Use HourOfDay to determine its rotation.
+	glRotatef(220.0*HourOfDay / 12.0, 0.0, 1.0, 0.0);
+	// Third, draw the earth as a wireframe sphere.
+	glColor3f(1.0, 0.0, 0.0);
+	glutWireSphere(0.4, 5, 5);
+	glPopMatrix();						// Restore matrix state
+
+	// Draw the Earth2
+	glPushMatrix();
+	// First position it around the sun
+	//		Use DayOfYear to determine its position
+	glRotatef(360.0*DayOfYear / 365.0, 0.0, 1.0, 0.0);
+	glTranslatef(4.0, 0.0, 0.0);
+						// Save matrix state
+										// Second, rotate the earth on its axis.
+										//		Use HourOfDay to determine its rotation.
+	glRotatef(360.0*HourOfDay / 24.0, 0.0, 1.0, 0.0);
+	// Third, draw the earth as a wireframe sphere.
+	glColor3f(0.2, 0.2, 1.0);
+	glutWireSphere(0.4, 10, 10);
+	glPopMatrix();						// Restore matrix state
 
 		// Flush the pipeline, and swap the buffers
-	    glFlush();
-	    glutSwapBuffers();
+	glFlush();
+	glutSwapBuffers();
 
-		if ( singleStep ) {
-			spinMode = GL_FALSE;
-		}
+	if (singleStep) {
+		spinMode = GL_FALSE;
+	}
 
-		glutPostRedisplay();		// Request a re-draw for animation purposes
+	glutPostRedisplay();		// Request a re-draw for animation purposes
+
 }
 
 
