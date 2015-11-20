@@ -11,7 +11,9 @@ static GLenum singleStep = GL_FALSE;
 
 // These three variables control the animation's state and speed.
 static float HourOfDay = 0.0;
+static float HourOfDayMerc = 0.0;
 static float DayOfYear = 0.0;
+static float DayOfYearMerc = 0.0;
 static float AnimateIncrement = 1.0;  // Time step for animation (hours)
 
 /**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
@@ -161,16 +163,16 @@ void myDisplay(void)
 	glutWireSphere(1.0, 15, 15);
 
 
-	// Draw the Earth1
+	// Draw the Mercury
 	glPushMatrix();
 	// First position it around the sun
 	//		Use DayOfYear to determine its position
-	glRotatef(220.0*DayOfYear / 220, 0.0, 1.0, 0.0);
-	glTranslatef(1.5, 0.0, 0.0);
+	glRotatef(360.0*DayOfYearMerc / 88, 0.0, 1.0, 0.0);
+	glTranslatef(1.5, 1.0, 0.0);
 	// Save matrix state
 	// Second, rotate the earth on its axis.
 	//		Use HourOfDay to determine its rotation.
-	glRotatef(220.0*HourOfDay / 12.0, 0.0, 1.0, 0.0);
+	glRotatef(360.0*HourOfDayMerc / 58.0, 0.0, 1.0, 0.0);
 	// Third, draw the earth as a wireframe sphere.
 	glColor3f(1.0, 0.0, 0.0);
 	glutWireSphere(0.4, 5, 5);
