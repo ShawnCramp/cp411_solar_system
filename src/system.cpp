@@ -140,12 +140,18 @@ void myDisplay(void)
 
 	if (spinMode) {
 		// Update the animation state
-		HourOfDay += AnimateIncrement;
-		DayOfYear += AnimateIncrement / 24.0;
+	    HourOfDay += AnimateIncrement;
+        DayOfYear += AnimateIncrement / 24.0;
 
-		HourOfDay = HourOfDay - ((int)(HourOfDay / 24)) * 24;
-		DayOfYear = DayOfYear - ((int)(DayOfYear / 365)) * 365;
-	}
+        HourOfDayMerc += AnimateIncrement;
+        DayOfYearMerc += AnimateIncrement / 58.0;
+
+        HourOfDay = HourOfDay - ((int)(HourOfDay / 24)) * 24;
+        DayOfYear = DayOfYear - ((int)(DayOfYear / 365)) * 365;
+
+        HourOfDayMerc = HourOfDayMerc - ((int)(HourOfDayMerc / 58)) * 58;
+        DayOfYearMerc = DayOfYearMerc - ((int)(DayOfYearMerc / 88)) * 88;
+    }
 
 	// Clear the current matrix (Modelview)
 	glLoadIdentity();
