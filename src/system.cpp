@@ -238,6 +238,7 @@ void myDisplay(void)
 
 
 	if (spinMode) {
+<<<<<<< HEAD
 		// Update Mercury
 		doyMercury += AnimateIncrement / hoursMercury;
 		hodMercury += AnimateIncrement;
@@ -263,6 +264,21 @@ void myDisplay(void)
 
 
 	}
+=======
+		// Update the animation state
+	    HourOfDay += AnimateIncrement;
+        DayOfYear += AnimateIncrement / 24.0;
+
+        HourOfDayMerc += AnimateIncrement;
+        DayOfYearMerc += AnimateIncrement / 58.0;
+
+        HourOfDay = HourOfDay - ((int)(HourOfDay / 24)) * 24;
+        DayOfYear = DayOfYear - ((int)(DayOfYear / 365)) * 365;
+
+        HourOfDayMerc = HourOfDayMerc - ((int)(HourOfDayMerc / 58)) * 58;
+        DayOfYearMerc = DayOfYearMerc - ((int)(DayOfYearMerc / 88)) * 88;
+    }
+>>>>>>> origin/master
 
 	// Clear the current matrix (Modelview)
 	glLoadIdentity();
