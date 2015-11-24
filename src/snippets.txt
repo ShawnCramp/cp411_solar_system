@@ -1,0 +1,51 @@
+File used to store snipped code instead of deleting it.
+
+
+From myDisplay();
+
+/*
+	// Draw the Mercury
+	glPushMatrix();
+	// First position it around the sun
+	//		Use DayOfYear to determine its position
+	glRotatef(360.0 * DayOfYearMerc / 88, 0.0, 1.0, 0.0);
+	glTranslatef(1.5, 0.0, 0.0);
+	// Save matrix state
+	// Second, rotate the earth on its axis.
+	//		Use HourOfDay to determine its rotation.
+	glRotatef(360.0 * HourOfDayMerc / 58.0, 0.0, 1.0, 0.0);
+	// Third, draw the earth as a wireframe sphere.
+	glColor3f(1.0, 0.0, 0.0);
+	glutWireSphere(0.4, 15, 15);
+	glPopMatrix();						// Restore matrix state
+
+
+	// Draw the Earth2
+	glPushMatrix();
+	// First position it around the sun
+	//		Use DayOfYear to determine its position
+	glRotatef(360.0*DayOfYear / 365.0, 0.0, 1.0, 0.0);
+	glTranslatef(4.0, 0.0, 0.0);
+	// Save matrix state
+	// Second, rotate the earth on its axis.
+	//		Use HourOfDay to determine its rotation.
+
+	glRotatef(360.0*HourOfDay / 24.0, 0.0, 1.0, 0.0);
+	// Third, draw the earth as a wireframe sphere.
+	glColor3f(0.2, 0.2, 1.0);
+	glutWireSphere(0.4, 10, 10);
+
+
+	// Draw a Moon
+	glPushMatrix();
+
+	glRotatef(360.0*DayOfYear * 2 / 500.0, 0.0, 1.0, 0.0);
+	glTranslatef(1.0, 0.0, 0.0);
+	glRotatef(60.0*HourOfDayMerc / 200.0, 0.0, 1.0, 0.0);
+	glColor3f(0.2, 0.2, 1.0);
+	glutWireSphere(0.1, 10, 10);
+
+	glPopMatrix();
+
+	glPopMatrix();						// Restore matrix state
+	*/

@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <stdio.h>
 #include <gl/Gl.h>
 #include <gl/freeglut.h>
 #include "solar.h"
@@ -9,11 +10,39 @@
 static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
 
+
+
+
+
 // These three variables control the animation's state and speed.
-static float HourOfDay = 0.0;
-static float HourOfDayMerc = 0.0;
-static float DayOfYear = 0.0;
-static float DayOfYearMerc = 0.0;
+
+// Earth
+static float hodEarth = 0.0;
+static float doyEarth = 0.0;
+static float daysEarth = 365.0;
+static float hoursEarth = 24.0;
+static float distanceEarth = 4.0;
+static float moonsEarth = 1.0;
+static float sizeEarth = 0.4;
+
+// Mercury
+static float doyMercury = 0.0;
+static float hodMercury = 0.0;
+static float daysMercury = 88.0;
+static float hoursMercury = 1407.5;
+static float distanceMercury = 1.5;
+static float moonsMercury = 0.0;
+static float sizeMercury = 0.2;
+
+// Venus
+static float doyVenus = 0.0;
+static float hodVenus = 0.0;
+static float daysVenus = 224.0;
+static float hoursVenus = 5832.0;
+static float distanceVenus = 2.5;
+static float moonsVenus = 0.0;
+static float sizeVenus = 0.3;
+
 static float AnimateIncrement = 1.0;  // Time step for animation (hours)
 
 /**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
@@ -132,19 +161,107 @@ static void Key_down(void)
 }
 
 
+void drawMoon(void) {
+
+	glPushMatrix();
+	// Random data for the moment
+	glRotatef(200 * 200 / 200, 0.0, 1.0, 0.0);
+	glTranslatef(0.7, 0.0, 0.0);
+
+	glRotatef(300 * 300 / 300, 0.0, 1.0, 0.0);
+	//glColor3f(0.0, 1.0, 0.0);
+
+	glutWireSphere(0.1, 15, 15);
+	glPopMatrix();
+}
+
+void drawPlanet(float doy, float hod, float days, float hours, float distance, float size, float moons) {
+	// Temporary Draw Planet Function
+
+	glPushMatrix();
+
+	// First position it around the sun
+	//		Use DayOfYear to determine its position
+	glRotatef(360.0 * doy / days, 0.0, 1.0, 0.0);
+	glTranslatef(distance, 0.0, 0.0);
+
+	// Save matrix state
+	// Second, rotate the earth on its axis.
+	//		Use HourOfDay to determine its rotation.
+	glRotatef(360.0 * hod / hours, 0.0, 1.0, 0.0);
+	// Third, draw the earth as a wire frame sphere.
+
+
+	// Copy pasted for texturing
+	/*
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	int b;
+	glScalef(0.0125 * R, 0.0125 * R, 0.0125 * R);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glBegin(GL_TRIANGLE_STRIP);
+	for ( b = 0; b < VertexCount; b++) {
+		glTexCoord2f(VERTEX[b].U, VERTEX[b].V);
+		glVertex3f(VERTEX[b].X, VERTEX[b].Y, -VERTEX[b].Z);
+	}
+
+	for ( b = 0; b <VertexCount; b++)
+	{
+
+	    glTexCoord2f (VERTEX[b].U, -VERTEX[b].V);
+
+	    glVertex3f (VERTEX[b].X, VERTEX[b].Y, VERTEX[b].Z);
+
+	}
+
+	glEnd();
+	*/
+	// end of copy paste
+
+
+	//glColor3f(0.0, 1.0, 0.0);
+	glutWireSphere(size, 15, 15);
+
+	for (int i = 0; i < moons; i++) {
+		drawMoon();
+	}
+
+	glPopMatrix();
+
+}
+
+
 //<<<<<<<<<<<<<<<<<<<<<<< myDisplay >>>>>>>>>>>>>>>>>
 void myDisplay(void) 
 {
-	// Clear the redering window
+	// Clear the rendering window
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	if (spinMode) {
-		// Update the animation state
-		HourOfDay += AnimateIncrement;
-		DayOfYear += AnimateIncrement / 24.0;
 
-		HourOfDay = HourOfDay - ((int)(HourOfDay / 24)) * 24;
-		DayOfYear = DayOfYear - ((int)(DayOfYear / 365)) * 365;
+	if (spinMode) {
+		// Update Mercury
+		doyMercury += AnimateIncrement / hoursMercury;
+		hodMercury += AnimateIncrement;
+
+		doyMercury = doyMercury - ((int)(doyMercury / daysMercury)) * daysMercury;
+		hodMercury = hodMercury - ((int)(hodMercury / hoursMercury)) * hoursMercury;
+
+
+		// Update Earth
+		hodEarth += AnimateIncrement;
+		doyEarth += AnimateIncrement / hoursEarth;
+
+		hodEarth = hodEarth - ((int)(hodEarth / hoursEarth)) * hoursEarth;
+		doyEarth = doyEarth - ((int)(doyEarth / daysEarth)) * daysEarth;
+
+
+		// Update Venus
+		hodVenus += AnimateIncrement;
+		doyVenus += AnimateIncrement / hoursVenus;
+
+		hodVenus = hodVenus - ((int)(hodVenus / hoursVenus)) * hoursVenus;
+		doyVenus = doyVenus - ((int)(doyVenus / daysVenus)) * daysVenus;
+
+
 	}
 
 	// Clear the current matrix (Modelview)
@@ -157,43 +274,16 @@ void myDisplay(void)
 	// (rotate the model's plane about the x axis by fifteen degrees)
 	glRotatef(90.0, 1.0, 0.0, 0.0);
 
-	// Draw the sun	-- as a yellow, wireframe sphere
-
+	// Draw the sun	-- as a yellow, wire frame sphere
 	glColor3f(1.0, 1.0, 0.0);
 	glutWireSphere(1.0, 15, 15);
 
+	// Draw Planets
+	drawPlanet(doyEarth, hodEarth, daysEarth, hoursEarth, distanceEarth, sizeEarth, moonsEarth); // Draw Earth
+	drawPlanet(doyMercury, hodMercury, daysMercury, hoursMercury, distanceMercury, sizeMercury, moonsMercury); // Draw Mercury
+	drawPlanet(doyVenus, hodVenus, daysVenus, hoursVenus, distanceVenus, sizeVenus, moonsVenus); // Draw Venus
 
-	// Draw the Mercury
-	glPushMatrix();
-	// First position it around the sun
-	//		Use DayOfYear to determine its position
-	glRotatef(360.0*DayOfYearMerc / 88, 0.0, 1.0, 0.0);
-	glTranslatef(1.5, 0.0, 0.0);
-	// Save matrix state
-	// Second, rotate the earth on its axis.
-	//		Use HourOfDay to determine its rotation.
-	glRotatef(360.0*HourOfDayMerc / 58.0, 0.0, 1.0, 0.0);
-	// Third, draw the earth as a wireframe sphere.
-	glColor3f(1.0, 0.0, 0.0);
-	glutWireSphere(0.4, 5, 5);
-	glPopMatrix();						// Restore matrix state
-
-	// Draw the Earth2
-	glPushMatrix();
-	// First position it around the sun
-	//		Use DayOfYear to determine its position
-	glRotatef(360.0*DayOfYear / 365.0, 0.0, 1.0, 0.0);
-	glTranslatef(4.0, 0.0, 0.0);
-						// Save matrix state
-										// Second, rotate the earth on its axis.
-										//		Use HourOfDay to determine its rotation.
-	glRotatef(360.0*HourOfDay / 24.0, 0.0, 1.0, 0.0);
-	// Third, draw the earth as a wireframe sphere.
-	glColor3f(0.2, 0.2, 1.0);
-	glutWireSphere(0.4, 10, 10);
-	glPopMatrix();						// Restore matrix state
-
-		// Flush the pipeline, and swap the buffers
+	// Flush the pipeline, and swap the buffers
 	glFlush();
 	glutSwapBuffers();
 
@@ -284,3 +374,4 @@ int main(int argc, char** argv) {
 	// go into a perpetual loop
 	glutMainLoop();
 }
+
