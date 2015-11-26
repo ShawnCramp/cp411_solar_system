@@ -3,15 +3,17 @@
 #include <gl/Gl.h>
 #include <gl/freeglut.h>
 #include "solar.h"
+#include <math.h>
+#include <string>
+#include "RGBpixmap.h"
 
 #define WIDTH 640
 #define HEIGHT 480
 
 static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
-
-
-
+float xSpeed = 1.0, ySpeed = 1.0, xAngle = 0.0, yAngle = 0.0;
+RGBpixmap pix[6]; // make six (empty) pixmaps
 
 
 // These three variables control the animation's state and speed.
@@ -77,6 +79,63 @@ void drawDot2d(GLint x, GLint y) {
 	glVertex2i(x, y);
 	glEnd();
 }
+
+/**
+* parseFile - reads "params.txt" and store its contents into a[i], b[i]... p[i]
+*/
+void parseFile(RGBpixmap &pix) {
+	string line;
+	string delimeter = ",";
+	ifstream myfile("E:\\cramp\\Workspace\\cram7290_cp411_a2\\images\\ilias.txt");
+	string token;
+	double t;
+	long i=0; //line count
+	long counter=0;
+	int r=0;
+	int g=0;
+	int b=0;
+
+
+	if (myfile.is_open()) {
+		while (getline(myfile, line)) {
+			size_t pos = 0;
+			int columns = 1;
+
+			while ((pos = line.find(delimeter)) != string::npos) {
+				token = line.substr(0, pos);
+				//read image dimension if i==0/1
+				if (i==0) {
+					t = atoi(token.c_str());
+					pix.nRows = t;
+				} else if (i==1) {
+					t = atoi(token.c_str());
+					pix.nCols = t;
+					pix.pixel = new RGB[3 * pix.nRows * pix.nCols];
+				} else { //parse the rest
+					t = atoi(token.c_str());
+					if (columns%3==1) {
+						r=t;
+					} else if (columns%3==2) {
+						g=t;
+					} else if (columns%3==0) {
+						b=t;
+						pix.pixel[counter].r=r;
+						pix.pixel[counter].g=g;
+						pix.pixel[counter++].b= b;
+						columns=0;
+					}
+					columns++;
+				}
+				i++;
+				line.erase(0, pos + delimeter.length());
+			}
+		}
+		myfile.close();
+	}
+
+	else cout << "Error-cannot open file";
+}
+
 
 //<<<<<<<<<<<<<<<<<<<<< Draw Sphere >>>>>>>>>>>>>>>>>>>>
 void drawSphere(GLdouble radius, GLint nSlices, GLint nStacks) {
@@ -180,49 +239,76 @@ void drawPlanet(float doy, float hod, float days, float hours, float distance, f
 
 	glPushMatrix();
 
-	// First position it around the sun
-	//		Use DayOfYear to determine its position
-	glRotatef(360.0 * doy / days, 0.0, 1.0, 0.0);
-	glTranslatef(distance, 0.0, 0.0);
+	glRotated(xAngle, 1.0,0.0,0.0);
+	glRotated(yAngle, 0.0,1.0,0.0);
 
-	// Save matrix state
-	// Second, rotate the earth on its axis.
-	//		Use HourOfDay to determine its rotation.
-	glRotatef(360.0 * hod / hours, 0.0, 1.0, 0.0);
-	// Third, draw the earth as a wire frame sphere.
+	glBindTexture(GL_TEXTURE_2D,2002); // right face: mandrill
 
+	double divisions = 100;
 
-	// Copy pasted for texturing
-	/*
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	int b;
-	glScalef(0.0125 * R, 0.0125 * R, 0.0125 * R);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glBegin(GL_TRIANGLE_STRIP);
-	for ( b = 0; b < VertexCount; b++) {
-		glTexCoord2f(VERTEX[b].U, VERTEX[b].V);
-		glVertex3f(VERTEX[b].X, VERTEX[b].Y, -VERTEX[b].Z);
-	}
+	double x, y, z, dTheta=180/divisions, dLon=360/divisions, degToRad=3.141592665885/180 ;
 
-	for ( b = 0; b <VertexCount; b++)
+	double r = 1;
+
+	for(double lat =0; lat <=180; lat+=dTheta)
 	{
+		        glBegin( GL_QUAD_STRIP ) ;
 
-	    glTexCoord2f (VERTEX[b].U, -VERTEX[b].V);
-
-	    glVertex3f (VERTEX[b].X, VERTEX[b].Y, VERTEX[b].Z);
-
-	}
-
-	glEnd();
-	*/
-	// end of copy paste
+		        for(double lon =0 ; lon <=360 ; lon+=dLon)
+		        {
 
 
-	//glColor3f(0.0, 1.0, 0.0);
-	glutWireSphere(size, 15, 15);
+		            //Vertex 1
+		            x = r*cos(lon * degToRad) * sin(lat * degToRad) ;
+		            y = r*sin(lon * degToRad) * sin(lat * degToRad) ;
+		            z = r*cos(lat * degToRad) ;
+		            glNormal3d( x, y, z) ;
+		            glTexCoord2d(lon/360-0.25, lat/180);
+		            glVertex3d( x, y, z ) ;
+
+
+		            //Vertex 2
+		            x = r*cos(lon * degToRad) * sin( (lat + dTheta)* degToRad) ;
+		            y = r*sin(lon * degToRad) * sin((lat + dTheta) * degToRad) ;
+		            z = r*cos( (lat + dTheta) * degToRad ) ;
+		            glNormal3d( x, y, z ) ;
+		            glTexCoord2d(lon/360-0.25, (lat + dTheta-1)/(180));
+		            glVertex3d( x, y, z ) ;
+
+
+		            //Vertex 3
+		            x = r*cos((lon + dLon) * degToRad) * sin((lat) * degToRad) ;
+		            y = r*sin((lon + dLon) * degToRad) * sin((lat) * degToRad) ;
+		            z = r*cos((lat) * degToRad ) ;
+		            glNormal3d( x, y, z ) ;
+		            glTexCoord2d((lon + dLon)/(360)-0.25 ,(lat)/180);
+		            glVertex3d( x, y, z ) ;
+
+
+		            //Vertex 4
+		            x = r*cos((lon + dLon) * degToRad) * sin((lat + dTheta)* degToRad) ;
+		            y = r*sin((lon + dLon)* degToRad) * sin((lat + dTheta)* degToRad) ;
+		            z = r*cos((lat + dTheta)* degToRad ) ;
+		            glNormal3d( x, y, z ) ;
+		            glTexCoord2d((lon + dLon)/360-0.25, (lat + dTheta)/(180));
+		            glVertex3d( x, y, z ) ;
+
+
+		        }
+		        glEnd() ;
+
+		    }
+
+
+		glTexCoord2f(0.0, 0.0); glVertex3f(1.0f, -1.0f, 1.0f);
+		glTexCoord2f(0.0, 1.0); glVertex3f(1.0f, -1.0f, -1.0f);
+		glTexCoord2f(1.0, 1.0); glVertex3f(1.0f, 1.0f, -1.0f);
+		glTexCoord2f(1.0, 0.0); glVertex3f(1.0f, 1.0f, 1.0f);
+		glEnd();
+
 
 	for (int i = 0; i < moons; i++) {
-		drawMoon();
+		//drawMoon();
 	}
 
 	glPopMatrix();
@@ -238,7 +324,6 @@ void myDisplay(void)
 
 
 	if (spinMode) {
-<<<<<<< HEAD
 		// Update Mercury
 		doyMercury += AnimateIncrement / hoursMercury;
 		hodMercury += AnimateIncrement;
@@ -264,21 +349,6 @@ void myDisplay(void)
 
 
 	}
-=======
-		// Update the animation state
-	    HourOfDay += AnimateIncrement;
-        DayOfYear += AnimateIncrement / 24.0;
-
-        HourOfDayMerc += AnimateIncrement;
-        DayOfYearMerc += AnimateIncrement / 58.0;
-
-        HourOfDay = HourOfDay - ((int)(HourOfDay / 24)) * 24;
-        DayOfYear = DayOfYear - ((int)(DayOfYear / 365)) * 365;
-
-        HourOfDayMerc = HourOfDayMerc - ((int)(HourOfDayMerc / 58)) * 58;
-        DayOfYearMerc = DayOfYearMerc - ((int)(DayOfYearMerc / 88)) * 88;
-    }
->>>>>>> origin/master
 
 	// Clear the current matrix (Modelview)
 	glLoadIdentity();
@@ -288,16 +358,16 @@ void myDisplay(void)
 
 	// Rotate the plane of the elliptic
 	// (rotate the model's plane about the x axis by fifteen degrees)
-	glRotatef(90.0, 1.0, 0.0, 0.0);
+	glRotatef(15.0, 1.0, 0.0, 0.0);
 
 	// Draw the sun	-- as a yellow, wire frame sphere
-	glColor3f(1.0, 1.0, 0.0);
-	glutWireSphere(1.0, 15, 15);
+	// glColor3f(1.0, 1.0, 0.0);
+	// glutWireSphere(1.0, 15, 15);
 
 	// Draw Planets
 	drawPlanet(doyEarth, hodEarth, daysEarth, hoursEarth, distanceEarth, sizeEarth, moonsEarth); // Draw Earth
-	drawPlanet(doyMercury, hodMercury, daysMercury, hoursMercury, distanceMercury, sizeMercury, moonsMercury); // Draw Mercury
-	drawPlanet(doyVenus, hodVenus, daysVenus, hoursVenus, distanceVenus, sizeVenus, moonsVenus); // Draw Venus
+	//drawPlanet(doyMercury, hodMercury, daysMercury, hoursMercury, distanceMercury, sizeMercury, moonsMercury); // Draw Mercury
+	//drawPlanet(doyVenus, hodVenus, daysVenus, hoursVenus, distanceVenus, sizeVenus, moonsVenus); // Draw Venus
 
 	// Flush the pipeline, and swap the buffers
 	glFlush();
@@ -315,8 +385,10 @@ void myDisplay(void)
 //<<<<<<<<<<<<<<<<<<<<<<< myInit >>>>>>>>>>>>>>>>>>>>
 void myInit(void) {
 
-	// set the drawing color
-	glColor3f(0.0f, 0.0f, 0.0f);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_TEXTURE_2D);
+	parseFile(pix[1]);
+	pix[1].setTexture(2002); // create texture
 
 	// a ‘dot’ is 4 by 4 pixels
 	glPointSize(1.0);
@@ -325,7 +397,7 @@ void myInit(void) {
 	gluOrtho2D(0.0, 640.0, 0.0, 480.0);
 
 	glShadeModel( GL_FLAT );
-	glClearColor( 0.0, 0.0, 0.0, 0.0 );
+	glClearColor(0.0f,0.0f,0.0f,0.0f); // background is white
 	glClearDepth( 1.0 );
 	glEnable( GL_DEPTH_TEST );
 }
@@ -347,6 +419,14 @@ static void ResizeWindow(int w, int h)
 
 	// Select the Modelview matrix
     glMatrixMode( GL_MODELVIEW );
+}
+
+
+void spinner(void)
+{ // alter angles by small amount
+	xAngle += xSpeed;
+	yAngle += ySpeed;
+	myDisplay();
 }
 
 
@@ -383,6 +463,8 @@ int main(int argc, char** argv) {
 
 	// set view port
 	glViewport(0, 0, 640, 480);
+
+	glutIdleFunc(spinner);
 
 	// Call myInit function
 	myInit();
