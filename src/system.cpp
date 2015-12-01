@@ -7,12 +7,12 @@
 #include <string>
 #include "RGBpixmap.h"
 
-#define WIDTH 640
-#define HEIGHT 480
+#define WIDTH 1024
+#define HEIGHT 768
 
 static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
-float xSpeed = 1.0, ySpeed = 1.0, xAngle = 0.0, yAngle = 0.0;
+float xSpeed = 1.0, ySpeed = 4.0, xAngle = 0.0, yAngle = 23.5;
 RGBpixmap pix[6]; // make six (empty) pixmaps
 
 
@@ -45,7 +45,7 @@ static float distanceVenus = 2.5;
 static float moonsVenus = 0.0;
 static float sizeVenus = 0.3;
 
-static float AnimateIncrement = 1.0;  // Time step for animation (hours)
+static float AnimateIncrement = 24.0;  // Time step for animation (hours)
 
 /**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
  * Author:	Shawn Cramp
@@ -183,12 +183,13 @@ void drawMoon(void) {
 void drawPlanet(float doy, float hod, float days, float hours, float distance, float size, float moons) {
 	// Temporary Draw Planet Function
 
+	glRotatef( 360.0*doy/365.0, 0.0, 1.0, 0.0 ); //rotates earth around the sun
+	glColor4f(1.f, 1.f, 1.f, 1.f); //reset the drawing color from yellow(sun) to white
+
 	glPushMatrix();
-
-	glRotated(xAngle, 1.0,0.0,0.0);
-	glRotated(yAngle, 0.0,1.0,0.0);
-
-	glBindTexture(GL_TEXTURE_2D,2002); // right face: mandrill
+	glTranslatef( 7.0, 0.0, 0.0 ); //translate earth 7 "units" away from the sun
+	glRotated(yAngle, 0.0,1.0,0.0); //earth's rotation on its own axis
+	glBindTexture(GL_TEXTURE_2D,2002); //earth's texture
 
 	double divisions = 100;
 
@@ -300,15 +301,15 @@ void myDisplay(void)
 	glLoadIdentity();
 
 	// Back off eight units to be able to view from the origin.
-	glTranslatef(0.0, 0.0, -8.0);
+	glTranslatef(0.0, 0.0, -15.0);
 
 	// Rotate the plane of the elliptic
 	// (rotate the model's plane about the x axis by fifteen degrees)
-	glRotatef(15.0, 1.0, 0.0, 0.0);
+	glRotatef(20.0, 1.0, 0.0, 0.0);
 
-	// Draw the sun	-- as a yellow, wire frame sphere
-	// glColor3f(1.0, 1.0, 0.0);
-	// glutWireSphere(1.0, 15, 15);
+	 // Draw the sun	-- as a yellow, wire frame sphere
+	 glColor3f(1.0, 1.0, 0.0);
+	 glutWireSphere(1.0, 15, 15);
 
 	// Draw Planets
 	drawPlanet(doyEarth, hodEarth, daysEarth, hoursEarth, distanceEarth, sizeEarth, moonsEarth); // Draw Earth
@@ -408,7 +409,7 @@ int main(int argc, char** argv) {
 	glutReshapeFunc( ResizeWindow );
 
 	// set view port
-	glViewport(0, 0, 640, 480);
+	glViewport(0, 0, 1024, 768);
 
 	glutIdleFunc(spinner);
 
