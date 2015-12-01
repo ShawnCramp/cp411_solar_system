@@ -6,15 +6,17 @@
 #include <math.h>
 #include <string>
 #include "RGBpixmap.h"
+#include "planet.h"
 
 #define WIDTH 1024
 #define HEIGHT 768
 
 static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
-float xSpeed = 1.0, ySpeed = 4.0, xAngle = 0.0, yAngle = 23.5;
-RGBpixmap pix[6]; // make six (empty) pixmaps
+float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
 
+RGBpixmap pix[6]; // make six (empty) pixmaps
+planet::Planet earth;
 
 // These three variables control the animation's state and speed.
 
@@ -23,7 +25,7 @@ static float hodEarth = 0.0;
 static float doyEarth = 0.0;
 static float daysEarth = 365.0;
 static float hoursEarth = 24.0;
-static float distanceEarth = 4.0;
+static float distanceEarth = 7.0;
 static float moonsEarth = 1.0;
 static float sizeEarth = 0.4;
 
@@ -180,122 +182,11 @@ void drawMoon(void) {
 	glPopMatrix();
 }
 
-void drawPlanet(float doy, float hod, float days, float hours, float distance, float size, float moons) {
-	// Temporary Draw Planet Function
-
-	glRotatef( 360.0*doy/365.0, 0.0, 1.0, 0.0 ); //rotates earth around the sun
-	glColor4f(1.f, 1.f, 1.f, 1.f); //reset the drawing color from yellow(sun) to white
-
-	glPushMatrix();
-	glTranslatef( 7.0, 0.0, 0.0 ); //translate earth 7 "units" away from the sun
-	glRotated(yAngle, 0.0,1.0,0.0); //earth's rotation on its own axis
-	glBindTexture(GL_TEXTURE_2D,2002); //earth's texture
-
-	double divisions = 100;
-
-	double x, y, z, dTheta=180/divisions, dLon=360/divisions, degToRad=3.141592665885/180 ;
-
-	double r = 1;
-
-	for(double lat =0; lat <=180; lat+=dTheta)
-	{
-		        glBegin( GL_QUAD_STRIP ) ;
-
-		        for(double lon =0 ; lon <=360 ; lon+=dLon)
-		        {
-
-
-		            //Vertex 1
-		            x = r*cos(lon * degToRad) * sin(lat * degToRad) ;
-		            y = r*sin(lon * degToRad) * sin(lat * degToRad) ;
-		            z = r*cos(lat * degToRad) ;
-		            glNormal3d( x, y, z) ;
-		            glTexCoord2d(lon/360-0.25, lat/180);
-		            glVertex3d( x, y, z ) ;
-
-
-		            //Vertex 2
-		            x = r*cos(lon * degToRad) * sin( (lat + dTheta)* degToRad) ;
-		            y = r*sin(lon * degToRad) * sin((lat + dTheta) * degToRad) ;
-		            z = r*cos( (lat + dTheta) * degToRad ) ;
-		            glNormal3d( x, y, z ) ;
-		            glTexCoord2d(lon/360-0.25, (lat + dTheta-1)/(180));
-		            glVertex3d( x, y, z ) ;
-
-
-		            //Vertex 3
-		            x = r*cos((lon + dLon) * degToRad) * sin((lat) * degToRad) ;
-		            y = r*sin((lon + dLon) * degToRad) * sin((lat) * degToRad) ;
-		            z = r*cos((lat) * degToRad ) ;
-		            glNormal3d( x, y, z ) ;
-		            glTexCoord2d((lon + dLon)/(360)-0.25 ,(lat)/180);
-		            glVertex3d( x, y, z ) ;
-
-
-		            //Vertex 4
-		            x = r*cos((lon + dLon) * degToRad) * sin((lat + dTheta)* degToRad) ;
-		            y = r*sin((lon + dLon)* degToRad) * sin((lat + dTheta)* degToRad) ;
-		            z = r*cos((lat + dTheta)* degToRad ) ;
-		            glNormal3d( x, y, z ) ;
-		            glTexCoord2d((lon + dLon)/360-0.25, (lat + dTheta)/(180));
-		            glVertex3d( x, y, z ) ;
-
-
-		        }
-		        glEnd() ;
-
-		    }
-
-
-		glTexCoord2f(0.0, 0.0); glVertex3f(1.0f, -1.0f, 1.0f);
-		glTexCoord2f(0.0, 1.0); glVertex3f(1.0f, -1.0f, -1.0f);
-		glTexCoord2f(1.0, 1.0); glVertex3f(1.0f, 1.0f, -1.0f);
-		glTexCoord2f(1.0, 0.0); glVertex3f(1.0f, 1.0f, 1.0f);
-		glEnd();
-
-
-	for (int i = 0; i < moons; i++) {
-		//drawMoon();
-	}
-
-	glPopMatrix();
-
-}
-
-
 //<<<<<<<<<<<<<<<<<<<<<<< myDisplay >>>>>>>>>>>>>>>>>
 void myDisplay(void) 
 {
 	// Clear the rendering window
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-	if (spinMode) {
-		// Update Mercury
-		doyMercury += AnimateIncrement / hoursMercury;
-		hodMercury += AnimateIncrement;
-
-		doyMercury = doyMercury - ((int)(doyMercury / daysMercury)) * daysMercury;
-		hodMercury = hodMercury - ((int)(hodMercury / hoursMercury)) * hoursMercury;
-
-
-		// Update Earth
-		hodEarth += AnimateIncrement;
-		doyEarth += AnimateIncrement / hoursEarth;
-
-		hodEarth = hodEarth - ((int)(hodEarth / hoursEarth)) * hoursEarth;
-		doyEarth = doyEarth - ((int)(doyEarth / daysEarth)) * daysEarth;
-
-
-		// Update Venus
-		hodVenus += AnimateIncrement;
-		doyVenus += AnimateIncrement / hoursVenus;
-
-		hodVenus = hodVenus - ((int)(hodVenus / hoursVenus)) * hoursVenus;
-		doyVenus = doyVenus - ((int)(doyVenus / daysVenus)) * daysVenus;
-
-
-	}
 
 	// Clear the current matrix (Modelview)
 	glLoadIdentity();
@@ -312,9 +203,8 @@ void myDisplay(void)
 	 glutWireSphere(1.0, 15, 15);
 
 	// Draw Planets
-	drawPlanet(doyEarth, hodEarth, daysEarth, hoursEarth, distanceEarth, sizeEarth, moonsEarth); // Draw Earth
-	//drawPlanet(doyMercury, hodMercury, daysMercury, hoursMercury, distanceMercury, sizeMercury, moonsMercury); // Draw Mercury
-	//drawPlanet(doyVenus, hodVenus, daysVenus, hoursVenus, distanceVenus, sizeVenus, moonsVenus); // Draw Venus
+
+	earth.draw();
 
 	// Flush the pipeline, and swap the buffers
 	glFlush();
@@ -331,6 +221,8 @@ void myDisplay(void)
 
 //<<<<<<<<<<<<<<<<<<<<<<< myInit >>>>>>>>>>>>>>>>>>>>
 void myInit(void) {
+	earth = planet::Planet(doyEarth, hodEarth, daysEarth, hoursEarth, distanceEarth,
+			sizeEarth, moonsEarth, AnimateIncrement, yAngle, 2002);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
