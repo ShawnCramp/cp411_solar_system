@@ -80,61 +80,7 @@ void drawDot2d(GLint x, GLint y) {
 	glEnd();
 }
 
-/**
-* parseFile - reads "params.txt" and store its contents into a[i], b[i]... p[i]
-*/
-void parseFile(RGBpixmap &pix) {
-	string line;
-	string delimeter = ",";
-	ifstream myfile("images/pixels.txt");
-	string token;
-	double t;
-	long i=0; //line count
-	long counter=0;
-	int r=0;
-	int g=0;
-	int b=0;
 
-
-	if (myfile.is_open()) {
-		while (getline(myfile, line)) {
-			size_t pos = 0;
-			int columns = 1;
-
-			while ((pos = line.find(delimeter)) != string::npos) {
-				token = line.substr(0, pos);
-				//read image dimension if i==0/1
-				if (i==0) {
-					t = atoi(token.c_str());
-					pix.nRows = t;
-				} else if (i==1) {
-					t = atoi(token.c_str());
-					pix.nCols = t;
-					pix.pixel = new RGB[3 * pix.nRows * pix.nCols];
-				} else { //parse the rest
-					t = atoi(token.c_str());
-					if (columns%3==1) {
-						r=t;
-					} else if (columns%3==2) {
-						g=t;
-					} else if (columns%3==0) {
-						b=t;
-						pix.pixel[counter].r=r;
-						pix.pixel[counter].g=g;
-						pix.pixel[counter++].b= b;
-						columns=0;
-					}
-					columns++;
-				}
-				i++;
-				line.erase(0, pos + delimeter.length());
-			}
-		}
-		myfile.close();
-	}
-
-	else cout << "Error-cannot open file";
-}
 
 
 //<<<<<<<<<<<<<<<<<<<<< Draw Sphere >>>>>>>>>>>>>>>>>>>>
@@ -387,7 +333,7 @@ void myInit(void) {
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
-	parseFile(pix[1]);
+	pix[1].parseFile();
 	pix[1].setTexture(2002); // create texture
 
 	// a ‘dot’ is 4 by 4 pixels
