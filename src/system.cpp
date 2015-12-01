@@ -86,7 +86,7 @@ void drawDot2d(GLint x, GLint y) {
 void parseFile(RGBpixmap &pix) {
 	string line;
 	string delimeter = ",";
-	ifstream myfile("images/pixels.txt");
+	ifstream myfile("E:\\cramp\\Workspace\\cram7290_cp411_a2\\images\\ilias.txt");
 	string token;
 	double t;
 	long i=0; //line count
