@@ -50,7 +50,6 @@ namespace planet {
 
 
 	void Planet::draw() {
-
 		p_hod += p_animateInc;
 		p_doy += p_animateInc / p_hours;
 
@@ -70,7 +69,7 @@ namespace planet {
 
 		double x, y, z, dTheta=180/divisions, dLon=360/divisions, degToRad=3.141592665885/180 ;
 
-		double r = 1;
+		double r = (double) p_size;
 
 		for(double lat =0; lat <=180; lat+=dTheta)
 		{
