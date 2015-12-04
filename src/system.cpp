@@ -38,9 +38,9 @@ static float sizeMercury = 0.2;
 // Venus
 static float doyVenus = 0.0;
 static float hodVenus = 0.0;
-static float daysVenus = 224.0;
+static float daysVenus = 0.9259;
 static float hoursVenus = 5832.0;
-static float distanceVenus = 2.5;
+static float distanceVenus = 4.0;
 static float moonsVenus = 0.0;
 static float sizeVenus = 0.3;
 
@@ -49,7 +49,7 @@ RGBpixmap pix[6]; // make six (empty) pixmaps
 planet::Planet earth;
 planet::Planet mercury;
 planet::Planet sun;
-
+planet::Planet venus;
 /**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
  * Author:	Shawn Cramp
  * ID:		111007290
@@ -203,15 +203,21 @@ void myDisplay(void)
 //	 glColor3f(1.0, 1.0, 0.0);
 //	 glutWireSphere(1.0, 15, 15);
 	sun.drawSun();
-
 	// Draw Planets
-	 glPushMatrix();
+	glPushMatrix();
 	mercury.draw();
 	glPopMatrix();
+
 	glPushMatrix();
 //	std::cout<<mercury.p_size<<std::endl;
 	earth.draw();
 	glPopMatrix();
+
+	glPushMatrix();
+	venus.draw();
+	glPopMatrix();
+
+
 
 
 	// Flush the pipeline, and swap the buffers
@@ -234,6 +240,8 @@ void myInit(void) {
 			 moonsEarth, sizeEarth, AnimateInc, yAngle, 2003);
 	mercury =  planet::Planet(doyMercury, hodMercury, daysMercury, hoursMercury, distanceMercury,
 			moonsMercury, sizeMercury, AnimateInc, yAngle, 2002);
+	venus = planet::Planet(doyVenus, hodVenus, daysVenus, hoursVenus, distanceVenus,
+			moonsVenus, sizeVenus, AnimateInc, yAngle, 2005);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
 	pix[1].parseFile("images/mercury.txt");
@@ -244,6 +252,10 @@ void myInit(void) {
 
 	pix[3].parseFile("images/sun.txt");
 	pix[3].setTexture(2004); // create texture
+
+	pix[4].parseFile("images/venus.txt");
+	pix[4].setTexture(2005); // create texture
+
 
 	// a ‘dot’ is 4 by 4 pixels
 	glPointSize(1.0);
