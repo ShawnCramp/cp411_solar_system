@@ -33,7 +33,7 @@ static float daysMercury = 1.5005;
 static float hoursMercury = 1407.5;
 static float distanceMercury = 3.0;
 static float moonsMercury = 0.0;
-static float sizeMercury = 0.6;
+static float sizeMercury = 0.2;
 
 // Venus
 static float doyVenus = 0.0;
@@ -48,6 +48,7 @@ static float sizeVenus = 0.3;
 RGBpixmap pix[6]; // make six (empty) pixmaps
 planet::Planet earth;
 planet::Planet mercury;
+planet::Planet sun;
 
 /**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
  * Author:	Shawn Cramp
@@ -199,8 +200,9 @@ void myDisplay(void)
 	glRotatef(20.0, 1.0, 0.0, 0.0);
 
 	 // Draw the sun	-- as a yellow, wire frame sphere
-	 glColor3f(1.0, 1.0, 0.0);
-	 glutWireSphere(1.0, 15, 15);
+//	 glColor3f(1.0, 1.0, 0.0);
+//	 glutWireSphere(1.0, 15, 15);
+	sun.drawSun();
 
 	// Draw Planets
 	 glPushMatrix();
@@ -227,6 +229,7 @@ void myDisplay(void)
 
 //<<<<<<<<<<<<<<<<<<<<<<< myInit >>>>>>>>>>>>>>>>>>>>
 void myInit(void) {
+	sun = planet::Planet(2004, 2.0);
 	earth = planet::Planet(doyEarth, hodEarth, daysEarth, hoursEarth, distanceEarth,
 			 moonsEarth, sizeEarth, AnimateInc, yAngle, 2003);
 	mercury =  planet::Planet(doyMercury, hodMercury, daysMercury, hoursMercury, distanceMercury,
@@ -238,6 +241,9 @@ void myInit(void) {
 
 	pix[2].parseFile("images/earth.txt");
 	pix[2].setTexture(2003); // create texture
+
+	pix[3].parseFile("images/sun.txt");
+	pix[3].setTexture(2004); // create texture
 
 	// a ‘dot’ is 4 by 4 pixels
 	glPointSize(1.0);

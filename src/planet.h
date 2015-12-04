@@ -18,7 +18,9 @@ namespace planet {
 		Planet(float hod, float doy, float days, float hours, float distance,
 				float moons, float size, float animateInc, float yAngle, int textureID);
 		Planet();
+		Planet(int textureID, float size);
 		void draw();
+		void drawSun();
 	};
 }
 
