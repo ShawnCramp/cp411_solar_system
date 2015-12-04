@@ -15,7 +15,7 @@ static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
 // These three variables control the animation's state and speed.
 float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
-static float AnimateInc = 50;  // Time step for animation (hours)
+static float AnimateInc = 10;  // Time step for animation (hours)
 
 // Earth
 static float hodEarth = 0.0;
@@ -233,7 +233,7 @@ void myInit(void) {
 			moonsMercury, sizeMercury, AnimateInc, yAngle, 2002);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
-	pix[1].parseFile("images/earth.txt");
+	pix[1].parseFile("images/mercury.txt");
 	pix[1].setTexture(2002); // create texture
 
 	pix[2].parseFile("images/earth.txt");
