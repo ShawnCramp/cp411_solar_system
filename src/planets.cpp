@@ -55,14 +55,13 @@ namespace planet {
 
 		p_hod = p_hod - ((int)(p_hod / p_hours)) * p_hours;
 		p_doy = p_doy - ((int)(p_doy / p_days)) * p_days;
-		p_yAngle += 2;
 
 		glRotatef( 360.0*p_doy/p_days, 0.0, 1.0, 0.0 ); //rotates earth around the sun
 		glColor4f(1.f, 1.f, 1.f, 1.f); //reset the drawing color from yellow(sun) to white
 
 		glPushMatrix();
 		glTranslatef(p_distance, 0.0, 0.0 ); //translate earth 7 "units" away from the sun
-		glRotated(p_yAngle, 0.0,1.0,0.0); //earth's rotation on its own axis
+		glRotated(360*p_hod/p_hours, 0.0,1.0,0.0); //earth's rotation on its own axis
 		glBindTexture(GL_TEXTURE_2D, p_textureID); //earth's texture
 
 		double divisions = 100;

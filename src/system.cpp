@@ -15,7 +15,7 @@ static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
 // These three variables control the animation's state and speed.
 float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
-static float AnimateIncrement = 24.0;  // Time step for animation (hours)
+static float AnimateInc = 50;  // Time step for animation (hours)
 
 // Earth
 static float hodEarth = 0.0;
@@ -29,11 +29,11 @@ static float sizeEarth = 0.6;
 // Mercury
 static float doyMercury = 0.0;
 static float hodMercury = 0.0;
-static float daysMercury = 88.0;
+static float daysMercury = 1.5005;
 static float hoursMercury = 1407.5;
 static float distanceMercury = 3.0;
 static float moonsMercury = 0.0;
-static float sizeMercury = 0.2;
+static float sizeMercury = 0.6;
 
 // Venus
 static float doyVenus = 0.0;
@@ -157,13 +157,13 @@ static void Key_s(void)
 
 static void Key_up(void)
 {
-    AnimateIncrement *= 2.0;			// Double the animation time step
+    AnimateInc *= 2.0;			// Double the animation time step
 }
 
 
 static void Key_down(void)
 {
-    AnimateIncrement /= 2.0;			// Halve the animation time step
+    AnimateInc /= 2.0;			// Halve the animation time step
 
 }
 
@@ -203,9 +203,14 @@ void myDisplay(void)
 	 glutWireSphere(1.0, 15, 15);
 
 	// Draw Planets
+	 glPushMatrix();
 	mercury.draw();
+	glPopMatrix();
+	glPushMatrix();
 //	std::cout<<mercury.p_size<<std::endl;
 	earth.draw();
+	glPopMatrix();
+
 
 	// Flush the pipeline, and swap the buffers
 	glFlush();
@@ -223,12 +228,12 @@ void myDisplay(void)
 //<<<<<<<<<<<<<<<<<<<<<<< myInit >>>>>>>>>>>>>>>>>>>>
 void myInit(void) {
 	earth = planet::Planet(doyEarth, hodEarth, daysEarth, hoursEarth, distanceEarth,
-			 moonsEarth, sizeEarth, AnimateIncrement, yAngle, 2003);
+			 moonsEarth, sizeEarth, AnimateInc, yAngle, 2003);
 	mercury =  planet::Planet(doyMercury, hodMercury, daysMercury, hoursMercury, distanceMercury,
-			moonsMercury, sizeMercury, AnimateIncrement, yAngle, 2002);
+			moonsMercury, sizeMercury, AnimateInc, yAngle, 2002);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
-	pix[1].parseFile("images/mercury.txt");
+	pix[1].parseFile("images/earth.txt");
 	pix[1].setTexture(2002); // create texture
 
 	pix[2].parseFile("images/earth.txt");
