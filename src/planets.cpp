@@ -71,24 +71,19 @@ namespace planet {
 		p_hod = p_hod - ((int)(p_hod / p_hours)) * p_hours;
 		p_doy = p_doy - ((int)(p_doy / p_days)) * p_days;
 
-		glRotatef( 360.0*p_doy/p_days, 0.0, 1.0, 0.0 ); //rotates earth around the sun
+		glRotatef( 720.0*p_doy/p_days, 0.0, 1.0, 0.0 ); //rotates earth around the sun
 		glColor4f(1.f, 1.f, 1.f, 1.f); //reset the drawing color from yellow(sun) to white
 
 		GLUquadricObj* quadro = gluNewQuadric();
 		gluQuadricNormals(quadro, GLU_SMOOTH);
 		gluQuadricTexture(quadro, GL_TRUE);
-		glEnable(GL_TEXTURE_2D);
-			glPushMatrix();
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-				glPushMatrix();
-					glTranslatef(p_distance, 0.0, 0.0 );
-					glRotated(360*p_hod/p_hours,0.0,1.0,0.0); //actual rotation
-					glRotatef( -90.0, 1.0, 0.0, 0.0 );
-					glBindTexture(GL_TEXTURE_2D, p_textureID);
-					gluSphere(quadro, p_size, 48, 48);
-				glPopMatrix();
-			glPopMatrix();
-		glDisable(GL_TEXTURE_2D);
+		glPushMatrix();
+			glTranslatef(p_distance, 0.0, 0.0 );
+			glRotated(360*p_hod/p_hours,0.0,1.0,0.0); //actual rotation
+			glRotatef( -90.0, 1.0, 0.0, 0.0 );
+			glBindTexture(GL_TEXTURE_2D, p_textureID);
+			gluSphere(quadro, p_size, 48, 48);
+		glPopMatrix();
 		gluDeleteQuadric(quadro);
 	}
 
@@ -96,16 +91,11 @@ namespace planet {
 		GLUquadricObj* quadro = gluNewQuadric();
 		gluQuadricNormals(quadro, GLU_SMOOTH);
 		gluQuadricTexture(quadro, GL_TRUE);
-		glEnable(GL_TEXTURE_2D);
-			glPushMatrix();
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-				glPushMatrix();
-					glRotatef( -90.0, 1.0, 0.0, 0.0 );
-					glBindTexture(GL_TEXTURE_2D, p_textureID);
-					gluSphere(quadro, p_size, 48, 48);
-				glPopMatrix();
-			glPopMatrix();
-		glDisable(GL_TEXTURE_2D);
+		glPushMatrix();
+			glRotatef( -90.0, 1.0, 0.0, 0.0 );
+			glBindTexture(GL_TEXTURE_2D, p_textureID);
+			gluSphere(quadro, p_size, 48, 48);
+		glPopMatrix();
 		gluDeleteQuadric(quadro);
 	}
 }

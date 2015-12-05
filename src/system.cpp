@@ -5,6 +5,7 @@
 #include "solar.h"
 #include <math.h>
 #include <string>
+#include <vector>
 #include "RGBpixmap.h"
 #include "planet.h"
 
@@ -15,7 +16,7 @@ static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
 // These three variables control the animation's state and speed.
 float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
-static float AnimateInc = 2;  // Time step for animation (hours)
+static float AnimateInc = 2.0;  // Time step for animation (hours)
 
 // Mercury
 static float doyMercury = 0.0;
@@ -111,7 +112,7 @@ planet::Planet saturn;
 planet::Planet uranus;
 planet::Planet neptune;
 planet::Planet pluto;
-
+std::vector<planet::Planet> solarSystem;
 
 
 /**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
@@ -222,46 +223,17 @@ void myDisplay(void)
 	// (rotate the model's plane about the x axis by fifteen degrees)
 	glRotatef(20.0, 1.0, 0.0, 0.0);
 
-	 // Draw the sun	-- as a yellow, wire frame sphere
-//	 glColor3f(1.0, 1.0, 0.0);
-//	 glutWireSphere(1.0, 15, 15);
-	sun.drawSun();
-	// Draw Planets
-	glPushMatrix();
-	mercury.draw();
-	glPopMatrix();
-
-	glPushMatrix();
-	earth.draw();
-	glPopMatrix();
-
-	glPushMatrix();
-	venus.draw();
-	glPopMatrix();
-
-	glPushMatrix();
-	mars.draw();
-	glPopMatrix();
-
-	glPushMatrix();
-	jupiter.draw();
-	glPopMatrix();
-
-	glPushMatrix();
-	saturn.draw();
-	glPopMatrix();
-
-	glPushMatrix();
-	uranus.draw();
-	glPopMatrix();
-
-	glPushMatrix();
-	neptune.draw();
-	glPopMatrix();
-
-	glPushMatrix();
-	pluto.draw();
-	glPopMatrix();
+	for (size_t t=0; t<solarSystem.size(); ++t) {
+		glEnable(GL_TEXTURE_2D);
+		if (t==0) {
+			solarSystem[t].drawSun();
+		} else {
+			glPushMatrix();
+				solarSystem[t].draw();
+			glPopMatrix();
+		}
+		glDisable(GL_TEXTURE_2D);
+	}
 
 	// Flush the pipeline, and swap the buffers
 	glFlush();
@@ -298,8 +270,16 @@ void myInit(void) {
 	pluto = planet::Planet(doyPluto, hodPluto, daysPluto, hoursPluto, distancePluto,
 					moonsPluto, sizePluto, AnimateInc, yAngle, 10);
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_TEXTURE_2D);
+	solarSystem.push_back(sun);
+	solarSystem.push_back(mercury);
+	solarSystem.push_back(venus);
+	solarSystem.push_back(earth);
+	solarSystem.push_back(mars);
+	solarSystem.push_back(jupiter);
+	solarSystem.push_back(saturn);
+	solarSystem.push_back(uranus);
+	solarSystem.push_back(neptune);
+	solarSystem.push_back(pluto);
 
 	pix[1].parseFile("images/sun.txt");
 	pix[1].setTexture(1); // create texture
@@ -330,16 +310,15 @@ void myInit(void) {
 
 	pix[10].parseFile("images/pluto.txt");
 	pix[10].setTexture(10); // create texture
-	// a ‘dot’ is 4 by 4 pixels
-	glPointSize(1.0);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0.0, 640.0, 0.0, 480.0);
+	gluOrtho2D(0.0, WIDTH, 0.0, HEIGHT);
 
 	glShadeModel( GL_FLAT );
 	glClearColor(0.0f,0.0f,0.0f,0.0f); // background is white
 	glClearDepth( 1.0 );
 	glEnable( GL_DEPTH_TEST );
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }
 
 
