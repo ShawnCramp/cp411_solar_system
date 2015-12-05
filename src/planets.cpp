@@ -48,86 +48,55 @@ namespace planet {
 
 	}
 
+	Planet::Planet(int textureID, float size)
+		: p_hod(0),
+		  p_doy(0),
+		  p_days(0),
+		  p_hours(0),
+		  p_distance(0),
+		  p_moons(0),
+		  p_size(size),
+		  p_animateInc(0),
+		  p_yAngle(0),
+		  p_textureID(textureID)
+	{
+
+	}
+
 
 	void Planet::draw() {
-
 		p_hod += p_animateInc;
 		p_doy += p_animateInc / p_hours;
 
 		p_hod = p_hod - ((int)(p_hod / p_hours)) * p_hours;
 		p_doy = p_doy - ((int)(p_doy / p_days)) * p_days;
-		p_yAngle += 2;
 
-		glRotatef( 360.0*p_doy/p_days, 0.0, 1.0, 0.0 ); //rotates earth around the sun
+		glRotatef( 720.0*p_doy/p_days, 0.0, 1.0, 0.0 ); //rotates earth around the sun
 		glColor4f(1.f, 1.f, 1.f, 1.f); //reset the drawing color from yellow(sun) to white
 
+		GLUquadricObj* quadro = gluNewQuadric();
+		gluQuadricNormals(quadro, GLU_SMOOTH);
+		gluQuadricTexture(quadro, GL_TRUE);
 		glPushMatrix();
-		glTranslatef(p_distance, 0.0, 0.0 ); //translate earth 7 "units" away from the sun
-		glRotated(p_yAngle, 0.0,1.0,0.0); //earth's rotation on its own axis
-		glBindTexture(GL_TEXTURE_2D, p_textureID); //earth's texture
-
-		double divisions = 100;
-
-		double x, y, z, dTheta=180/divisions, dLon=360/divisions, degToRad=3.141592665885/180 ;
-
-		double r = 1;
-
-		for(double lat =0; lat <=180; lat+=dTheta)
-		{
-			glBegin( GL_QUAD_STRIP ) ;
-
-			for(double lon =0 ; lon <=360 ; lon+=dLon)
-			{
-				//Vertex 1
-				x = r*cos(lon * degToRad) * sin(lat * degToRad) ;
-				y = r*sin(lon * degToRad) * sin(lat * degToRad) ;
-				z = r*cos(lat * degToRad) ;
-				glNormal3d( x, y, z) ;
-				glTexCoord2d(lon/360-0.25, lat/180);
-				glVertex3d( x, y, z ) ;
-
-
-				//Vertex 2
-				x = r*cos(lon * degToRad) * sin( (lat + dTheta)* degToRad) ;
-				y = r*sin(lon * degToRad) * sin((lat + dTheta) * degToRad) ;
-				z = r*cos( (lat + dTheta) * degToRad ) ;
-				glNormal3d( x, y, z ) ;
-				glTexCoord2d(lon/360-0.25, (lat + dTheta-1)/(180));
-				glVertex3d( x, y, z ) ;
-
-
-				//Vertex 3
-				x = r*cos((lon + dLon) * degToRad) * sin((lat) * degToRad) ;
-				y = r*sin((lon + dLon) * degToRad) * sin((lat) * degToRad) ;
-				z = r*cos((lat) * degToRad ) ;
-				glNormal3d( x, y, z ) ;
-				glTexCoord2d((lon + dLon)/(360)-0.25 ,(lat)/180);
-				glVertex3d( x, y, z ) ;
-
-
-				//Vertex 4
-				x = r*cos((lon + dLon) * degToRad) * sin((lat + dTheta)* degToRad) ;
-				y = r*sin((lon + dLon)* degToRad) * sin((lat + dTheta)* degToRad) ;
-				z = r*cos((lat + dTheta)* degToRad ) ;
-				glNormal3d( x, y, z ) ;
-				glTexCoord2d((lon + dLon)/360-0.25, (lat + dTheta)/(180));
-				glVertex3d( x, y, z ) ;
-			}
-			glEnd() ;
-		}
-
-		glTexCoord2f(0.0, 0.0); glVertex3f(1.0f, -1.0f, 1.0f);
-		glTexCoord2f(0.0, 1.0); glVertex3f(1.0f, -1.0f, -1.0f);
-		glTexCoord2f(1.0, 1.0); glVertex3f(1.0f, 1.0f, -1.0f);
-		glTexCoord2f(1.0, 0.0); glVertex3f(1.0f, 1.0f, 1.0f);
-		glEnd();
-
-
-//		for (int i = 0; i < moons; i++) {
-//			//drawMoon();
-//		}
-
+			glTranslatef(p_distance, 0.0, 0.0 );
+			glRotated(360*p_hod/p_hours,0.0,1.0,0.0); //actual rotation
+			glRotatef( -90.0, 1.0, 0.0, 0.0 );
+			glBindTexture(GL_TEXTURE_2D, p_textureID);
+			gluSphere(quadro, p_size, 48, 48);
 		glPopMatrix();
+		gluDeleteQuadric(quadro);
+	}
+
+	void Planet::drawSun() {
+		GLUquadricObj* quadro = gluNewQuadric();
+		gluQuadricNormals(quadro, GLU_SMOOTH);
+		gluQuadricTexture(quadro, GL_TRUE);
+		glPushMatrix();
+			glRotatef( -90.0, 1.0, 0.0, 0.0 );
+			glBindTexture(GL_TEXTURE_2D, p_textureID);
+			gluSphere(quadro, p_size, 48, 48);
+		glPopMatrix();
+		gluDeleteQuadric(quadro);
 	}
 }
 
