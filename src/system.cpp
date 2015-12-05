@@ -17,15 +17,6 @@ static GLenum singleStep = GL_FALSE;
 float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
 static float AnimateInc = 10;  // Time step for animation (hours)
 
-// Earth
-static float hodEarth = 0.0;
-static float doyEarth = 0.0;
-static float daysEarth = 365.0;
-static float hoursEarth = 24.0;
-static float distanceEarth = 7.0;
-static float moonsEarth = 1.0;
-static float sizeEarth = 0.6;
-
 // Mercury
 static float doyMercury = 0.0;
 static float hodMercury = 0.0;
@@ -44,12 +35,32 @@ static float distanceVenus = 4.0;
 static float moonsVenus = 0.0;
 static float sizeVenus = 0.3;
 
+// Earth
+static float hodEarth = 0.0;
+static float doyEarth = 0.0;
+static float daysEarth = 365.0;
+static float hoursEarth = 24.0;
+static float distanceEarth = 7.0;
+static float moonsEarth = 1.0;
+static float sizeEarth = 0.6;
+
+// Mars
+static float doyMars = 0.0;
+static float hodMars = 0.0;
+static float daysMars = 672.98;
+static float hoursMars = 24.5;
+static float distanceMars = 10.0;
+static float moonsMars = 0.0;
+static float sizeMars = 0.6;
+
 /* Global containers */
-RGBpixmap pix[6]; // make six (empty) pixmaps
-planet::Planet earth;
-planet::Planet mercury;
+RGBpixmap pix[10]; // make six (empty) pixmaps
 planet::Planet sun;
+planet::Planet mercury;
 planet::Planet venus;
+planet::Planet earth;
+planet::Planet mars;
+
 /**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
  * Author:	Shawn Cramp
  * ID:		111007290
@@ -61,7 +72,7 @@ planet::Planet venus;
  * ID:		120585990
  *
  * Description:	CP411 Final Assignment
- * 		People Walking
+ * 		Solar System
  *
  * Date:	November 13th, 2015
  *<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>
@@ -242,6 +253,8 @@ void myInit(void) {
 			moonsMercury, sizeMercury, AnimateInc, yAngle, 2002);
 	venus = planet::Planet(doyVenus, hodVenus, daysVenus, hoursVenus, distanceVenus,
 			moonsVenus, sizeVenus, AnimateInc, yAngle, 2005);
+	venus = planet::Planet(doyMars, hodMars, daysMars, hoursMars, distanceMars,
+				moonsMars, sizeMars, AnimateInc, yAngle, 2006);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
 	pix[1].parseFile("images/mercury.txt");
@@ -255,6 +268,9 @@ void myInit(void) {
 
 	pix[4].parseFile("images/venus.txt");
 	pix[4].setTexture(2005); // create texture
+
+	pix[5].parseFile("images/mars.txt");
+	pix[5].setTexture(2006); // create texture
 
 
 	// a ‘dot’ is 4 by 4 pixels
