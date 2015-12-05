@@ -61,7 +61,7 @@ static float daysJupiter = 10469.46;
 static float hoursJupiter = 9.925;
 static float distanceJupiter = 11.0;
 static float moonsJupiter = 0.0;
-static float sizeJupiter = 2.0;
+static float sizeJupiter = 4.0;
 
 // Saturn
 static float doySaturn = 0.0;
