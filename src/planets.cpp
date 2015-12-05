@@ -74,141 +74,39 @@ namespace planet {
 		glRotatef( 360.0*p_doy/p_days, 0.0, 1.0, 0.0 ); //rotates earth around the sun
 		glColor4f(1.f, 1.f, 1.f, 1.f); //reset the drawing color from yellow(sun) to white
 
-		glPushMatrix();
-		glTranslatef(p_distance, 0.0, 0.0 ); //translate earth 7 "units" away from the sun
-		glRotated(360*p_hod/p_hours,0.0,1.0,0.0); //actual rotation
-		glRotated(-90, 1.0,0.0,0.0); //puts the poles on north/south
-		glBindTexture(GL_TEXTURE_2D, p_textureID); //earth's texture
-
-		double divisions = 100;
-
-		double x, y, z, dTheta=180/divisions, dLon=360/divisions, degToRad=3.141592665885/180 ;
-
-		double r = (double) p_size;
-
-		for(double lat =0; lat <=180; lat+=dTheta)
-		{
-			glBegin( GL_QUAD_STRIP ) ;
-
-			for(double lon =0 ; lon <=360 ; lon+=dLon)
-			{
-				//Vertex 1
-				x = r*cos(lon * degToRad) * sin(lat * degToRad) ;
-				y = r*sin(lon * degToRad) * sin(lat * degToRad) ;
-				z = r*cos(lat * degToRad) ;
-				glNormal3d( x, y, z) ;
-				glTexCoord2d(lon/360-0.25, lat/180);
-				glVertex3d( x, y, z ) ;
-
-
-				//Vertex 2
-				x = r*cos(lon * degToRad) * sin( (lat + dTheta)* degToRad) ;
-				y = r*sin(lon * degToRad) * sin((lat + dTheta) * degToRad) ;
-				z = r*cos( (lat + dTheta) * degToRad ) ;
-				glNormal3d( x, y, z ) ;
-				glTexCoord2d(lon/360-0.25, (lat + dTheta-1)/(180));
-				glVertex3d( x, y, z ) ;
-
-
-				//Vertex 3
-				x = r*cos((lon + dLon) * degToRad) * sin((lat) * degToRad) ;
-				y = r*sin((lon + dLon) * degToRad) * sin((lat) * degToRad) ;
-				z = r*cos((lat) * degToRad ) ;
-				glNormal3d( x, y, z ) ;
-				glTexCoord2d((lon + dLon)/(360)-0.25 ,(lat)/180);
-				glVertex3d( x, y, z ) ;
-
-
-				//Vertex 4
-				x = r*cos((lon + dLon) * degToRad) * sin((lat + dTheta)* degToRad) ;
-				y = r*sin((lon + dLon)* degToRad) * sin((lat + dTheta)* degToRad) ;
-				z = r*cos((lat + dTheta)* degToRad ) ;
-				glNormal3d( x, y, z ) ;
-				glTexCoord2d((lon + dLon)/360-0.25, (lat + dTheta)/(180));
-				glVertex3d( x, y, z ) ;
-			}
-			glEnd() ;
-		}
-
-		glTexCoord2f(0.0, 0.0); glVertex3f(1.0f, -1.0f, 1.0f);
-		glTexCoord2f(0.0, 1.0); glVertex3f(1.0f, -1.0f, -1.0f);
-		glTexCoord2f(1.0, 1.0); glVertex3f(1.0f, 1.0f, -1.0f);
-		glTexCoord2f(1.0, 0.0); glVertex3f(1.0f, 1.0f, 1.0f);
-		glEnd();
-
-
-//		for (int i = 0; i < moons; i++) {
-//			//drawMoon();
-//		}
-
-		glPopMatrix();
+		GLUquadricObj* quadro = gluNewQuadric();
+		gluQuadricNormals(quadro, GLU_SMOOTH);
+		gluQuadricTexture(quadro, GL_TRUE);
+		glEnable(GL_TEXTURE_2D);
+			glPushMatrix();
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+				glPushMatrix();
+					glTranslatef(p_distance, 0.0, 0.0 );
+					glRotated(360*p_hod/p_hours,0.0,1.0,0.0); //actual rotation
+					glRotatef( -90.0, 1.0, 0.0, 0.0 );
+					glBindTexture(GL_TEXTURE_2D, p_textureID);
+					gluSphere(quadro, p_size, 48, 48);
+				glPopMatrix();
+			glPopMatrix();
+		glDisable(GL_TEXTURE_2D);
+		gluDeleteQuadric(quadro);
 	}
 
 	void Planet::drawSun() {
-		glColor4f(1.f, 1.f, 1.f, 1.f); //reset the drawing color from yellow(sun) to white
-		p_hod += 1 * 24;
-		glPushMatrix();
-		glRotated(360*p_hod,0.0,1.0,0.0); //actual rotation
-		glRotated(-90, 1.0,0.0,0.0); //puts the poles on north/south
-		glBindTexture(GL_TEXTURE_2D, p_textureID); //earth's texture
-
-		double divisions = 100;
-
-		double x, y, z, dTheta=180/divisions, dLon=360/divisions, degToRad=3.141592665885/180 ;
-
-		double r = (double) p_size;
-
-		for(double lat =0; lat <=180; lat+=dTheta)
-		{
-			glBegin( GL_QUAD_STRIP ) ;
-
-			for(double lon =0 ; lon <=360 ; lon+=dLon)
-			{
-				//Vertex 1
-				x = r*cos(lon * degToRad) * sin(lat * degToRad) ;
-				y = r*sin(lon * degToRad) * sin(lat * degToRad) ;
-				z = r*cos(lat * degToRad) ;
-				glNormal3d( x, y, z) ;
-				glTexCoord2d(lon/360-0.25, lat/180);
-				glVertex3d( x, y, z ) ;
-
-
-				//Vertex 2
-				x = r*cos(lon * degToRad) * sin( (lat + dTheta)* degToRad) ;
-				y = r*sin(lon * degToRad) * sin((lat + dTheta) * degToRad) ;
-				z = r*cos( (lat + dTheta) * degToRad ) ;
-				glNormal3d( x, y, z ) ;
-				glTexCoord2d(lon/360-0.25, (lat + dTheta-1)/(180));
-				glVertex3d( x, y, z ) ;
-
-
-				//Vertex 3
-				x = r*cos((lon + dLon) * degToRad) * sin((lat) * degToRad) ;
-				y = r*sin((lon + dLon) * degToRad) * sin((lat) * degToRad) ;
-				z = r*cos((lat) * degToRad ) ;
-				glNormal3d( x, y, z ) ;
-				glTexCoord2d((lon + dLon)/(360)-0.25 ,(lat)/180);
-				glVertex3d( x, y, z ) ;
-
-
-				//Vertex 4
-				x = r*cos((lon + dLon) * degToRad) * sin((lat + dTheta)* degToRad) ;
-				y = r*sin((lon + dLon)* degToRad) * sin((lat + dTheta)* degToRad) ;
-				z = r*cos((lat + dTheta)* degToRad ) ;
-				glNormal3d( x, y, z ) ;
-				glTexCoord2d((lon + dLon)/360-0.25, (lat + dTheta)/(180));
-				glVertex3d( x, y, z ) ;
-			}
-			glEnd() ;
-		}
-
-		glTexCoord2f(0.0, 0.0); glVertex3f(1.0f, -1.0f, 1.0f);
-		glTexCoord2f(0.0, 1.0); glVertex3f(1.0f, -1.0f, -1.0f);
-		glTexCoord2f(1.0, 1.0); glVertex3f(1.0f, 1.0f, -1.0f);
-		glTexCoord2f(1.0, 0.0); glVertex3f(1.0f, 1.0f, 1.0f);
-		glEnd();
-
-		glPopMatrix();
+		GLUquadricObj* quadro = gluNewQuadric();
+		gluQuadricNormals(quadro, GLU_SMOOTH);
+		gluQuadricTexture(quadro, GL_TRUE);
+		glEnable(GL_TEXTURE_2D);
+			glPushMatrix();
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+				glPushMatrix();
+					glRotatef( -90.0, 1.0, 0.0, 0.0 );
+					glBindTexture(GL_TEXTURE_2D, p_textureID);
+					gluSphere(quadro, p_size, 48, 48);
+				glPopMatrix();
+			glPopMatrix();
+		glDisable(GL_TEXTURE_2D);
+		gluDeleteQuadric(quadro);
 	}
 }
 
