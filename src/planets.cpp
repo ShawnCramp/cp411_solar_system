@@ -76,7 +76,8 @@ namespace planet {
 
 		glPushMatrix();
 		glTranslatef(p_distance, 0.0, 0.0 ); //translate earth 7 "units" away from the sun
-		glRotated(360*p_hod/p_hours, 0.0,1.0,0.0); //earth's rotation on its own axis
+		glRotated(360*p_hod/p_hours,0.0,1.0,0.0); //actual rotation
+		glRotated(-90, 1.0,0.0,0.0); //puts the poles on north/south
 		glBindTexture(GL_TEXTURE_2D, p_textureID); //earth's texture
 
 		double divisions = 100;
@@ -147,7 +148,8 @@ namespace planet {
 		glColor4f(1.f, 1.f, 1.f, 1.f); //reset the drawing color from yellow(sun) to white
 		p_hod += 1 * 24;
 		glPushMatrix();
-		glRotated(360*p_hod/1, 0.0,1.0,0.0); //earth's rotation on its own axis
+		glRotated(360*p_hod,0.0,1.0,0.0); //actual rotation
+		glRotated(-90, 1.0,0.0,0.0); //puts the poles on north/south
 		glBindTexture(GL_TEXTURE_2D, p_textureID); //earth's texture
 
 		double divisions = 100;
