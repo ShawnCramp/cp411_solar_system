@@ -13,12 +13,27 @@
 
 static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
-float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
-
-RGBpixmap pix[6]; // make six (empty) pixmaps
-planet::Planet earth;
-
 // These three variables control the animation's state and speed.
+float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
+static float AnimateInc = 75;  // Time step for animation (hours)
+
+// Mercury
+static float doyMercury = 0.0;
+static float hodMercury = 0.0;
+static float daysMercury = 1.5005;
+static float hoursMercury = 1407.5;
+static float distanceMercury = 3.0;
+static float moonsMercury = 0.0;
+static float sizeMercury = 0.2;
+
+// Venus
+static float doyVenus = 0.0;
+static float hodVenus = 0.0;
+static float daysVenus = 0.9259;
+static float hoursVenus = 5832.0;
+static float distanceVenus = 4.0;
+static float moonsVenus = 0.0;
+static float sizeVenus = 0.3;
 
 // Earth
 static float hodEarth = 0.0;
@@ -27,27 +42,77 @@ static float daysEarth = 365.0;
 static float hoursEarth = 24.0;
 static float distanceEarth = 7.0;
 static float moonsEarth = 1.0;
-static float sizeEarth = 0.4;
+static float sizeEarth = 0.6;
 
-// Mercury
-static float doyMercury = 0.0;
-static float hodMercury = 0.0;
-static float daysMercury = 88.0;
-static float hoursMercury = 1407.5;
-static float distanceMercury = 1.5;
-static float moonsMercury = 0.0;
-static float sizeMercury = 0.2;
+// Mars
+static float doyMars = 0.0;
+static float hodMars = 0.0;
+static float daysMars = 672.98;
+static float hoursMars = 24.5;
+static float distanceMars = 8.0;
+static float moonsMars = 0.0;
+static float sizeMars = 0.6;
 
-// Venus
-static float doyVenus = 0.0;
-static float hodVenus = 0.0;
-static float daysVenus = 224.0;
-static float hoursVenus = 5832.0;
-static float distanceVenus = 2.5;
-static float moonsVenus = 0.0;
-static float sizeVenus = 0.3;
+// Jupiter
+static float doyJupiter = 0.0;
+static float hodJupiter = 0.0;
+static float daysJupiter = 10469.46;
+static float hoursJupiter = 9.925;
+static float distanceJupiter = 11.0;
+static float moonsJupiter = 0.0;
+static float sizeJupiter = 2.0;
 
-static float AnimateIncrement = 24.0;  // Time step for animation (hours)
+// Saturn
+static float doySaturn = 0.0;
+static float hodSaturn = 0.0;
+static float daysSaturn = 24475.95;
+static float hoursSaturn = 10.55;
+static float distanceSaturn = 13.0;
+static float moonsSaturn = 0.0;
+static float sizeSaturn = 2.0;
+
+// Uranus
+static float doyUranus = 0.0;
+static float hodUranus = 0.0;
+static float daysUranus = 43324.94;
+static float hoursUranus = 17.2;
+static float distanceUranus = 15.0;
+static float moonsUranus = 0.0;
+static float sizeUranus = 2.0;
+
+// Neptune
+static float doyNeptune = 0.0;
+static float hodNeptune = 0.0;
+static float daysNeptune = 89649.93;
+static float hoursNeptune = 16.11;
+static float distanceNeptune = 17.0;
+static float moonsNeptune = 0.0;
+static float sizeNeptune = 2.0;
+
+// Pluto
+static float doyPluto = 0.0;
+static float hodPluto = 0.0;
+static float daysPluto = 14181.75;
+static float hoursPluto = 153.29;
+static float distancePluto = 19.0;
+static float moonsPluto = 0.0;
+static float sizePluto = 1.0;
+
+
+/* Global containers */
+RGBpixmap pix[10]; // make ten (empty) pixmaps
+planet::Planet sun;
+planet::Planet mercury;
+planet::Planet venus;
+planet::Planet earth;
+planet::Planet mars;
+planet::Planet jupiter;
+planet::Planet saturn;
+planet::Planet uranus;
+planet::Planet neptune;
+planet::Planet pluto;
+
+
 
 /**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
  * Author:	Shawn Cramp
@@ -60,7 +125,7 @@ static float AnimateIncrement = 24.0;  // Time step for animation (hours)
  * ID:		120585990
  *
  * Description:	CP411 Final Assignment
- * 		People Walking
+ * 		Solar System
  *
  * Date:	November 13th, 2015
  *<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>
@@ -157,13 +222,13 @@ static void Key_s(void)
 
 static void Key_up(void)
 {
-    AnimateIncrement *= 2.0;			// Double the animation time step
+    AnimateInc *= 2.0;			// Double the animation time step
 }
 
 
 static void Key_down(void)
 {
-    AnimateIncrement /= 2.0;			// Halve the animation time step
+    AnimateInc /= 2.0;			// Halve the animation time step
 
 }
 
@@ -199,12 +264,45 @@ void myDisplay(void)
 	glRotatef(20.0, 1.0, 0.0, 0.0);
 
 	 // Draw the sun	-- as a yellow, wire frame sphere
-	 glColor3f(1.0, 1.0, 0.0);
-	 glutWireSphere(1.0, 15, 15);
-
+//	 glColor3f(1.0, 1.0, 0.0);
+//	 glutWireSphere(1.0, 15, 15);
+	sun.drawSun();
 	// Draw Planets
+	glPushMatrix();
+	mercury.draw();
+	glPopMatrix();
 
+	glPushMatrix();
 	earth.draw();
+	glPopMatrix();
+
+	glPushMatrix();
+	venus.draw();
+	glPopMatrix();
+
+	glPushMatrix();
+	mars.draw();
+	glPopMatrix();
+
+	glPushMatrix();
+	jupiter.draw();
+	glPopMatrix();
+
+	glPushMatrix();
+	saturn.draw();
+	glPopMatrix();
+
+	glPushMatrix();
+	uranus.draw();
+	glPopMatrix();
+
+	glPushMatrix();
+	neptune.draw();
+	glPopMatrix();
+
+	glPushMatrix();
+	pluto.draw();
+	glPopMatrix();
 
 	// Flush the pipeline, and swap the buffers
 	glFlush();
@@ -221,14 +319,57 @@ void myDisplay(void)
 
 //<<<<<<<<<<<<<<<<<<<<<<< myInit >>>>>>>>>>>>>>>>>>>>
 void myInit(void) {
+	sun = planet::Planet(2004, 2.0);
 	earth = planet::Planet(doyEarth, hodEarth, daysEarth, hoursEarth, distanceEarth,
-			sizeEarth, moonsEarth, AnimateIncrement, yAngle, 2002);
+			 moonsEarth, sizeEarth, AnimateInc, yAngle, 2003);
+	mercury =  planet::Planet(doyMercury, hodMercury, daysMercury, hoursMercury, distanceMercury,
+			moonsMercury, sizeMercury, AnimateInc, yAngle, 2002);
+	venus = planet::Planet(doyVenus, hodVenus, daysVenus, hoursVenus, distanceVenus,
+			moonsVenus, sizeVenus, AnimateInc, yAngle, 2005);
+	mars = planet::Planet(doyMars, hodMars, daysMars, hoursMars, distanceMars,
+				moonsMars, sizeMars, AnimateInc, yAngle, 2006);
+	jupiter = planet::Planet(doyJupiter, hodJupiter, daysJupiter, hoursJupiter, distanceJupiter,
+					moonsJupiter, sizeJupiter, AnimateInc, yAngle, 2007);
+	saturn = planet::Planet(doySaturn, hodSaturn, daysSaturn, hoursSaturn, distanceSaturn,
+					moonsSaturn, sizeSaturn, AnimateInc, yAngle, 2008);
+	uranus = planet::Planet(doyUranus, hodUranus, daysUranus, hoursUranus, distanceUranus,
+					moonsUranus, sizeUranus, AnimateInc, yAngle, 2009);
+	neptune = planet::Planet(doyNeptune, hodNeptune, daysNeptune, hoursNeptune, distanceNeptune,
+					moonsNeptune, sizeNeptune, AnimateInc, yAngle, 2010);
+	pluto = planet::Planet(doyPluto, hodPluto, daysPluto, hoursPluto, distancePluto,
+					moonsPluto, sizePluto, AnimateInc, yAngle, 2011);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
-	pix[1].parseFile();
+	pix[1].parseFile("images/mercury.txt");
 	pix[1].setTexture(2002); // create texture
 
+	pix[2].parseFile("images/earth.txt");
+	pix[2].setTexture(2003); // create texture
+
+	pix[3].parseFile("images/sun.txt");
+	pix[3].setTexture(2004); // create texture
+
+	pix[4].parseFile("images/venus.txt");
+	pix[4].setTexture(2005); // create texture
+
+	pix[5].parseFile("images/mars.txt");
+	pix[5].setTexture(2006); // create texture
+
+	pix[6].parseFile("images/jupiter.txt");
+	pix[6].setTexture(2007); // create texture
+
+	pix[7].parseFile("images/saturn.txt");
+	pix[7].setTexture(2008); // create texture
+
+	pix[8].parseFile("images/uranus.txt");
+	pix[8].setTexture(2009); // create texture
+
+	pix[9].parseFile("images/neptune.txt");
+	pix[9].setTexture(2010); // create texture
+
+	pix[10].parseFile("images/pluto.txt");
+	pix[10].setTexture(2011); // create texture
 	// a ‘dot’ is 4 by 4 pixels
 	glPointSize(1.0);
 	glMatrixMode(GL_PROJECTION);

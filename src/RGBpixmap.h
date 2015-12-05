@@ -14,7 +14,7 @@ class RGBpixmap{
     int nRows, nCols;       // dimensions of the pixmap
     RGB* pixel;             // array of pixels
     void setTexture(GLuint textureName);
-    void parseFile();
+    void parseFile(string filename);
 };
 
 
@@ -30,10 +30,10 @@ void RGBpixmap :: setTexture(GLuint textureName)
 /**
 * parseFile - reads "params.txt" and store its contents into a[i], b[i]... p[i]
 */
-void RGBpixmap::parseFile() {
+void RGBpixmap::parseFile(string filename) {
 	string line;
 	string delimeter = ",";
-	ifstream myfile("images/pixels.txt");
+	ifstream myfile(filename.c_str());
 	string token;
 	double t;
 	long i=0; //line count
