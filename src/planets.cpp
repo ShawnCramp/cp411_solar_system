@@ -83,7 +83,7 @@ namespace planet {
 				glPushMatrix();
 					glTranslatef(p_distance, 0.0, 0.0 );
 					glRotated(360*p_hod/p_hours,0.0,1.0,0.0); //actual rotation
-					glRotatef( -90.0, 1.0, 0.0, 0.0 );
+					glRotatef( 90.0, 1.0, 0.0, 0.0 );
 					glBindTexture(GL_TEXTURE_2D, p_textureID);
 					gluSphere(quadro, p_size, 48, 48);
 				glPopMatrix();
