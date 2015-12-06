@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <gl/Gl.h>
 #include <gl/freeglut.h>
+#include <gl/glut.h>
 #include "solar.h"
 #include <math.h>
 #include <string>
@@ -11,6 +12,14 @@
 
 #define WIDTH 1024
 #define HEIGHT 768
+
+GLint moving = 0, xBegin = 0, coordinate = 1, type = 4, selected = 0, showing =
+		0, solar = 0, shading = 1, backface = 1, openbf = 0, D3 = 0,
+		lightOn = 0, style = 1,glslOption = 0;
+
+GLfloat xeye = 3.0, yeye = 3.0, zeye = 7.0;  //  Viewing-coordinate origin.
+GLfloat xref = 0.0, yref = 0.0, zref = 0.0;  //  Look-at point.
+GLfloat Vx = 0.0, Vy = 1.0, Vz = 0.0;        //  View up vector.
 
 static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
@@ -348,6 +357,143 @@ void spinner(void)
 	myDisplay();
 }
 
+void mainMenu(GLint menuOption) {
+	switch (menuOption) {
+	case 1: {
+		// temp
+		std::cout<<'Planet Menu'<<std::endl;
+	}
+		break;
+	case 2:
+		exit(0);
+	}
+	glutPostRedisplay();
+}
+
+
+void PlanetMenu(GLint transOption) {
+	switch (transOption) {
+	case 1: {
+		// Select Mercury
+		std::cout<<"Mercury"<<std::endl;
+	}
+		break;
+	case 2: {
+		// Select Venus
+		std::cout<<"Venus"<<std::endl;
+	}
+		break;
+	case 3: {
+		// Select Earth
+		std::cout<<"Earth"<<std::endl;
+	}
+		break;
+	case 4: {
+		// Select Mars
+		std::cout<<"Mars"<<std::endl;
+	}
+		break;
+	case 5: {
+		// Select Jupiter
+		std::cout<<"Jupiter"<<std::endl;
+
+	}
+		break;
+	case 6: {
+		// Select Saturn
+		std::cout<<"Saturn"<<std::endl;
+	}
+		break;
+	case 7: {
+		// Select Uranus
+		std::cout<<"Uranus"<<std::endl;
+	}
+		break;
+	case 8: {
+		// Neptune
+		std::cout<<"Neptune"<<std::endl;
+	}
+		break;
+	case 9: {
+		// Select Pluto
+		std::cout<<"Pluto"<<std::endl;
+	}
+	}
+	glutPostRedisplay();
+}
+
+
+void SectionMenu(GLint transOption) {
+	switch (transOption) {
+	case 1: {
+		// Select Inner
+		std::cout<<"Inner"<<std::endl;
+		solarSystem.clear();
+		solarSystem.push_back(sun);
+		solarSystem.push_back(mercury);
+		solarSystem.push_back(venus);
+		solarSystem.push_back(earth);
+		solarSystem.push_back(mars);
+	}
+		break;
+	case 2: {
+		// Select Outer
+		std::cout<<"Outer"<<std::endl;
+		solarSystem.clear();
+		solarSystem.push_back(sun);
+		solarSystem.push_back(jupiter);
+		solarSystem.push_back(saturn);
+		solarSystem.push_back(uranus);
+		solarSystem.push_back(neptune);
+		solarSystem.push_back(pluto);
+	}
+		break;
+	case 3: {
+		// Select Entire
+		std::cout<<"Entire"<<std::endl;
+		solarSystem.clear();
+		solarSystem.push_back(sun);
+		solarSystem.push_back(mercury);
+		solarSystem.push_back(venus);
+		solarSystem.push_back(earth);
+		solarSystem.push_back(mars);
+		solarSystem.push_back(jupiter);
+		solarSystem.push_back(saturn);
+		solarSystem.push_back(uranus);
+		solarSystem.push_back(neptune);
+		solarSystem.push_back(pluto);
+	}
+	}
+	glutPostRedisplay();
+}
+
+
+void myMenu() {
+	GLint planet_Menu, section_Menu, main_Menu;
+
+	planet_Menu = glutCreateMenu(PlanetMenu);
+	glutAddMenuEntry(" Mercury ", 1);
+	glutAddMenuEntry(" Venus ", 2);
+	glutAddMenuEntry(" Earth ", 3);
+	glutAddMenuEntry(" Mars ", 4);
+	glutAddMenuEntry(" Jupiter ", 5);
+	glutAddMenuEntry(" Saturn ", 6);
+	glutAddMenuEntry(" Uranus ", 7);
+	glutAddMenuEntry(" Neptune ", 8);
+	glutAddMenuEntry(" Pluto ", 9);
+
+	section_Menu = glutCreateMenu(SectionMenu);
+	glutAddMenuEntry(" Inner ", 1);
+	glutAddMenuEntry(" Outer ", 2);
+	glutAddMenuEntry(" Full ", 3);
+
+	glutCreateMenu(mainMenu); // Main pop-up menu
+	glutAddSubMenu(" Planets ", planet_Menu);
+	glutAddSubMenu(" Sections ", section_Menu);
+	glutAddMenuEntry(" Quit ", 2);
+
+}
+
 
 //<<<<<<<<<<<<<<<<<<<<<<<< main >>>>>>>>>>>>>>>>>>>>>>
 int main(int argc, char** argv) {
@@ -369,6 +515,7 @@ int main(int argc, char** argv) {
 
 	// register redraw function
 	glutDisplayFunc(myDisplay);
+
 	// Set up the callback function for resizing windows
 	glutReshapeFunc( ResizeWindow );
 
@@ -379,6 +526,12 @@ int main(int argc, char** argv) {
 
 	// Call myInit function
 	myInit();
+
+	// Create Menu
+	myMenu();
+
+	// Attach Menu
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 	// go into a perpetual loop
 	glutMainLoop();
