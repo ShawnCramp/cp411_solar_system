@@ -50,7 +50,7 @@ static float doyMars = 0.0;
 static float hodMars = 0.0;
 static float daysMars = 672.98;
 static float hoursMars = 24.5;
-static float distanceMars = 8.0;
+static float distanceMars = 10.0;
 static float moonsMars = 0.0;
 static float sizeMars = 0.6;
 
@@ -59,7 +59,7 @@ static float doyJupiter = 0.0;
 static float hodJupiter = 0.0;
 static float daysJupiter = 10469.46;
 static float hoursJupiter = 9.925;
-static float distanceJupiter = 11.0;
+static float distanceJupiter = 16.0;
 static float moonsJupiter = 0.0;
 static float sizeJupiter = 4.0;
 
@@ -68,7 +68,7 @@ static float doySaturn = 0.0;
 static float hodSaturn = 0.0;
 static float daysSaturn = 24475.95;
 static float hoursSaturn = 10.55;
-static float distanceSaturn = 13.0;
+static float distanceSaturn = 24.0;
 static float moonsSaturn = 0.0;
 static float sizeSaturn = 2.0;
 
@@ -77,7 +77,7 @@ static float doyUranus = 0.0;
 static float hodUranus = 0.0;
 static float daysUranus = 43324.94;
 static float hoursUranus = 17.2;
-static float distanceUranus = 15.0;
+static float distanceUranus = 30.0;
 static float moonsUranus = 0.0;
 static float sizeUranus = 2.0;
 
@@ -86,7 +86,7 @@ static float doyNeptune = 0.0;
 static float hodNeptune = 0.0;
 static float daysNeptune = 89649.93;
 static float hoursNeptune = 16.11;
-static float distanceNeptune = 17.0;
+static float distanceNeptune = 36.0;
 static float moonsNeptune = 0.0;
 static float sizeNeptune = 2.0;
 
@@ -95,7 +95,7 @@ static float doyPluto = 0.0;
 static float hodPluto = 0.0;
 static float daysPluto = 14181.75;
 static float hoursPluto = 153.29;
-static float distancePluto = 19.0;
+static float distancePluto = 40.0;
 static float moonsPluto = 0.0;
 static float sizePluto = 1.0;
 
@@ -217,7 +217,7 @@ void myDisplay(void)
 	glLoadIdentity();
 
 	// Back off eight units to be able to view from the origin.
-	glTranslatef(0.0, 0.0, -15.0);
+	glTranslatef(0.0, 0.0, -30.0);
 
 	// Rotate the plane of the elliptic
 	// (rotate the model's plane about the x axis by fifteen degrees)
