@@ -208,8 +208,10 @@ static void Key_down(void)
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<< myDisplay >>>>>>>>>>>>>>>>>
-void myDisplay(void) 
+void myDisplay(void)
 {
+	glEnable(GL_LIGHTING);
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(60.0, WIDTH/HEIGHT, 0.2, 100.0);
@@ -218,9 +220,8 @@ void myDisplay(void)
 	glMatrixMode(GL_MODELVIEW);
 	// Clear the current matrix (Modelview)
 	glLoadIdentity();
-
 	// Back off eight units to be able to view from the origin.
-	glTranslatef(0.0, 0.0, -30.0);
+	glTranslatef(0.0, 0.0, -60.0);
 
 	// Rotate the plane of the elliptic
 	// (rotate the model's plane about the x axis by fifteen degrees)
@@ -239,6 +240,7 @@ void myDisplay(void)
 	}
 
 	// Flush the pipeline, and swap the buffers
+	glDisable(GL_LIGHTING);
 	glFlush();
 	glutSwapBuffers();
 
@@ -250,6 +252,23 @@ void myDisplay(void)
 
 }
 
+
+void initLights()
+{
+	   GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	   GLfloat mat_shininess[] = { 50.0 };
+	   GLfloat light_position[] = { 0.0, 0.0, 1.0, 0.0 };
+	   glClearColor (0.0, 0.0, 0.0, 0.0);
+	   glShadeModel (GL_SMOOTH);
+
+	   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+	   glEnable(GL_LIGHTING);
+	   glEnable(GL_LIGHT0);
+	   glEnable(GL_DEPTH_TEST);
+}
 
 //<<<<<<<<<<<<<<<<<<<<<<< myInit >>>>>>>>>>>>>>>>>>>>
 void myInit(void) {
@@ -317,11 +336,12 @@ void myInit(void) {
 	glLoadIdentity();
 	gluOrtho2D(0.0, WIDTH, 0.0, HEIGHT);
 
-	glShadeModel( GL_FLAT );
+	glShadeModel( GL_SMOOTH );
 	glClearColor(0.0f,0.0f,0.0f,0.0f); // background is white
 	glClearDepth( 1.0 );
 	glEnable( GL_DEPTH_TEST );
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	initLights();
 }
 
 
