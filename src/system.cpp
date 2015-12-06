@@ -59,7 +59,7 @@ static float doyMars = 0.0;
 static float hodMars = 0.0;
 static float daysMars = 672.98;
 static float hoursMars = 24.5;
-static float distanceMars = 8.0;
+static float distanceMars = 10.0;
 static float moonsMars = 0.0;
 static float sizeMars = 0.6;
 
@@ -68,7 +68,7 @@ static float doyJupiter = 0.0;
 static float hodJupiter = 0.0;
 static float daysJupiter = 10469.46;
 static float hoursJupiter = 9.925;
-static float distanceJupiter = 11.0;
+static float distanceJupiter = 16.0;
 static float moonsJupiter = 0.0;
 static float sizeJupiter = 4.0;
 
@@ -77,7 +77,7 @@ static float doySaturn = 0.0;
 static float hodSaturn = 0.0;
 static float daysSaturn = 24475.95;
 static float hoursSaturn = 10.55;
-static float distanceSaturn = 13.0;
+static float distanceSaturn = 24.0;
 static float moonsSaturn = 0.0;
 static float sizeSaturn = 2.0;
 
@@ -86,7 +86,7 @@ static float doyUranus = 0.0;
 static float hodUranus = 0.0;
 static float daysUranus = 43324.94;
 static float hoursUranus = 17.2;
-static float distanceUranus = 15.0;
+static float distanceUranus = 30.0;
 static float moonsUranus = 0.0;
 static float sizeUranus = 2.0;
 
@@ -95,7 +95,7 @@ static float doyNeptune = 0.0;
 static float hodNeptune = 0.0;
 static float daysNeptune = 89649.93;
 static float hoursNeptune = 16.11;
-static float distanceNeptune = 17.0;
+static float distanceNeptune = 36.0;
 static float moonsNeptune = 0.0;
 static float sizeNeptune = 2.0;
 
@@ -104,7 +104,7 @@ static float doyPluto = 0.0;
 static float hodPluto = 0.0;
 static float daysPluto = 14181.75;
 static float hoursPluto = 153.29;
-static float distancePluto = 19.0;
+static float distancePluto = 40.0;
 static float moonsPluto = 0.0;
 static float sizePluto = 1.0;
 
@@ -217,16 +217,20 @@ static void Key_down(void)
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<< myDisplay >>>>>>>>>>>>>>>>>
-void myDisplay(void) 
+void myDisplay(void)
 {
-	// Clear the rendering window
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_LIGHTING);
 
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(60.0, WIDTH/HEIGHT, 0.2, 100.0);
+	// Clear the rendering window
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT| GL_STENCIL_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
 	// Clear the current matrix (Modelview)
 	glLoadIdentity();
-
 	// Back off eight units to be able to view from the origin.
-	glTranslatef(0.0, 0.0, -15.0);
+	glTranslatef(0.0, 0.0, -60.0);
 
 	// Rotate the plane of the elliptic
 	// (rotate the model's plane about the x axis by fifteen degrees)
@@ -245,6 +249,7 @@ void myDisplay(void)
 	}
 
 	// Flush the pipeline, and swap the buffers
+	glDisable(GL_LIGHTING);
 	glFlush();
 	glutSwapBuffers();
 
@@ -256,6 +261,23 @@ void myDisplay(void)
 
 }
 
+
+void initLights()
+{
+	   GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	   GLfloat mat_shininess[] = { 50.0 };
+	   GLfloat light_position[] = { 0.0, 0.0, 1.0, 0.0 };
+	   glClearColor (0.0, 0.0, 0.0, 0.0);
+	   glShadeModel (GL_SMOOTH);
+
+	   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+	   glEnable(GL_LIGHTING);
+	   glEnable(GL_LIGHT0);
+	   glEnable(GL_DEPTH_TEST);
+}
 
 //<<<<<<<<<<<<<<<<<<<<<<< myInit >>>>>>>>>>>>>>>>>>>>
 void myInit(void) {
@@ -323,11 +345,12 @@ void myInit(void) {
 	glLoadIdentity();
 	gluOrtho2D(0.0, WIDTH, 0.0, HEIGHT);
 
-	glShadeModel( GL_FLAT );
+	glShadeModel( GL_SMOOTH );
 	glClearColor(0.0f,0.0f,0.0f,0.0f); // background is white
 	glClearDepth( 1.0 );
 	glEnable( GL_DEPTH_TEST );
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	initLights();
 }
 
 
