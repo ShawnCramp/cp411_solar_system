@@ -481,40 +481,46 @@ void SectionMenu(GLint transOption) {
 	case 1: {
 		// Select Inner
 		std::cout<<"Inner"<<std::endl;
-		solarSystem.clear();
-		solarSystem.push_back(sun);
-		solarSystem.push_back(mercury);
-		solarSystem.push_back(venus);
-		solarSystem.push_back(earth);
-		solarSystem.push_back(mars);
+		solarSystem[1].p_size = sizeMercury;
+		solarSystem[2].p_size = sizeVenus;
+		solarSystem[3].p_size = sizeEarth;
+		solarSystem[4].p_size = sizeMars;
+		solarSystem[5].p_size = 0.0;
+		solarSystem[6].p_size = 0.0;
+		solarSystem[7].p_size = 0.0;
+		solarSystem[8].p_size = 0.0;
+		solarSystem[9].p_size = 0.0;
+
 	}
 		break;
 	case 2: {
 		// Select Outer
 		std::cout<<"Outer"<<std::endl;
-		solarSystem.clear();
-		solarSystem.push_back(sun);
-		solarSystem.push_back(jupiter);
-		solarSystem.push_back(saturn);
-		solarSystem.push_back(uranus);
-		solarSystem.push_back(neptune);
-		solarSystem.push_back(pluto);
+		solarSystem[1].p_size = 0.0;
+		solarSystem[2].p_size = 0.0;
+		solarSystem[3].p_size = 0.0;
+		solarSystem[4].p_size = 0.0;
+		solarSystem[5].p_size = sizeJupiter;
+		solarSystem[6].p_size = sizeSaturn;
+		solarSystem[7].p_size = sizeNeptune;
+		solarSystem[8].p_size = sizeUranus;
+		solarSystem[9].p_size = sizePluto;
+
 	}
 		break;
 	case 3: {
 		// Select Entire
 		std::cout<<"Entire"<<std::endl;
-		solarSystem.clear();
-		solarSystem.push_back(sun);
-		solarSystem.push_back(mercury);
-		solarSystem.push_back(venus);
-		solarSystem.push_back(earth);
-		solarSystem.push_back(mars);
-		solarSystem.push_back(jupiter);
-		solarSystem.push_back(saturn);
-		solarSystem.push_back(uranus);
-		solarSystem.push_back(neptune);
-		solarSystem.push_back(pluto);
+		solarSystem[1].p_size = sizeMercury;
+		solarSystem[2].p_size = sizeVenus;
+		solarSystem[3].p_size = sizeEarth;
+		solarSystem[4].p_size = sizeMars;
+		solarSystem[5].p_size = sizeJupiter;
+		solarSystem[6].p_size = sizeSaturn;
+		solarSystem[7].p_size = sizeNeptune;
+		solarSystem[8].p_size = sizeUranus;
+		solarSystem[9].p_size = sizePluto;
+
 	}
 	}
 	glutPostRedisplay();
