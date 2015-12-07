@@ -114,7 +114,7 @@ static float moonsPluto = 0.0;
 static float sizePluto = 0.4;
 
 /* Global containers */
-RGBpixmap pix[10]; // make ten (empty) pixmaps
+RGBpixmap pix[11]; // make ten (empty) pixmaps
 planet::Planet sun;
 planet::Planet mercury;
 planet::Planet venus;
@@ -242,6 +242,70 @@ static void Key_down(void) {
 
 }
 
+void drawSkybox(void) {
+		// Front side
+		glPushMatrix();
+		glBegin(GL_POLYGON);
+		glBindTexture(GL_TEXTURE_2D, 4);
+		glTexCoord2f(30.0, 30.0);
+		glVertex3f( -30.5, -30.5, -30.5);       // P1
+		glTexCoord2f(30.0, 0.0);
+		glVertex3f( -30.5,  30.5, -30.5);       // P2
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(  30.5,  30.5, -30.5);       // P3
+		glTexCoord2f(0.0, 30.0);
+		glVertex3f(  30.5, -30.5, -30.5);       // P4
+		glEnd();
+		glPopMatrix();
+
+		/*
+		// White side - BACK
+		glBegin(GL_POLYGON);
+		glColor3f(   1.0,  1.0, 1.0 );
+		glVertex3f(  60.5, -60.5, 60.5 );
+		glVertex3f(  60.5,  60.5, 60.5 );
+		glVertex3f( -60.5,  60.5, 60.5 );
+		glVertex3f( -60.5, -60.5, 60.5 );
+		glEnd();
+
+		// Purple side - RIGHT
+		glBegin(GL_POLYGON);
+		glColor3f(   1.0,  1.0, 1.0 );
+		glVertex3f( 60.5, -60.5, -60.5 );
+		glVertex3f( 60.5,  60.5, -60.5 );
+		glVertex3f( 60.5,  60.5,  60.5 );
+		glVertex3f( 60.5, -60.5,  60.5 );
+		glEnd();
+
+		// Green side - LEFT
+		glBegin(GL_POLYGON);
+		glColor3f(   1.0,  1.0, 1.0 );
+		glVertex3f( -60.5, -60.5,  60.5 );
+		glVertex3f( -60.5,  60.5,  60.5 );
+		glVertex3f( -60.5,  60.5, -60.5 );
+		glVertex3f( -60.5, -60.5, -60.5 );
+		glEnd();
+
+		// Blue side - TOP
+		glBegin(GL_POLYGON);
+		glColor3f(   1.0,  1.0, 1.0 );
+		glVertex3f(  60.5,  60.5,  60.5 );
+		glVertex3f(  60.5,  60.5, -60.5 );
+		glVertex3f( -60.5,  60.5, -60.5 );
+		glVertex3f( -60.5,  60.5,  60.5 );
+		glEnd();
+
+		// Red side - BOTTOM
+		glBegin(GL_POLYGON);
+		glColor3f(   1.0,  1.0, 1.0 );
+		glVertex3f(  60.5, -60.5, -60.5 );
+		glVertex3f(  60.5, -60.5,  60.5 );
+		glVertex3f( -60.5, -60.5,  60.5 );
+		glVertex3f( -60.5, -60.5, -60.5 );
+		glEnd();
+		*/
+}
+
 //<<<<<<<<<<<<<<<<<<<<<<< myDisplay >>>>>>>>>>>>>>>>>
 void myDisplay(void)
 {
@@ -280,6 +344,11 @@ void myDisplay(void)
 		}
 		glDisable(GL_TEXTURE_2D);
 	}
+
+	// Draw Skybox
+	glEnable(GL_TEXTURE_2D);
+	drawSkybox();
+	glDisable(GL_TEXTURE_2D);
 
 	// Flush the pipeline, and swap the buffers
 	glDisable(GL_LIGHTING);
@@ -373,6 +442,9 @@ void myInit(void) {
 
 	pix[10].parseFile("images/pluto.txt");
 	pix[10].setTexture(10); // create texture
+
+	pix[11].parseFile("images/stars.txt");
+	pix[11].setTexture(11); // skybox texture
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
