@@ -114,6 +114,9 @@ static float distancePluto = 40.0;
 static float moonsPluto = 0.0;
 static float sizePluto = 0.4;
 
+static float camDeltaX = 0.0;
+static float camDeltaZ = 0.0;
+
 /* Global containers */
 RGBpixmap pix[11]; // make ten (empty) pixmaps
 planet::Planet sun;
@@ -127,6 +130,8 @@ planet::Planet uranus;
 planet::Planet neptune;
 planet::Planet pluto;
 std::vector<planet::Planet> solarSystem;
+
+position::Position p;
 
 /**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
  * Author:	Shawn Cramp
@@ -180,6 +185,14 @@ void myKeyboard(unsigned char key, int x, int y) {
 		viewerDistance += viewerDistanceIncrement;
 		if (viewerDistance > maximumViewerDistance)
 			viewerDistance = maximumViewerDistance;
+		break;
+	}
+	case 'm': {
+		p = solarSystem[1].getPosition();
+		// Select Mercury
+		std::cout<<"Mercury"<<std::endl;
+		camDeltaX = p.x;
+		camDeltaZ = p.y;
 		break;
 	}
 
@@ -320,14 +333,14 @@ void myDisplay(void)
 	glMatrixMode(GL_MODELVIEW);
 	// Clear the current matrix (Modelview)
 	glLoadIdentity();
-	position::Position p = solarSystem[1].getPosition();
+
 	gluLookAt(
 			lookAtPosition[0]
 					+ viewerDistance * sin(viewerZenith) * sin(viewerAzimuth),
-			lookAtPosition[1] + 7.0 * cos(viewerZenith),
+			lookAtPosition[1] + viewerDistance * cos(viewerZenith),
 			lookAtPosition[2]
 					+ viewerDistance * sin(viewerZenith) * cos(viewerAzimuth),
-			lookAtPosition[0]+p.x, lookAtPosition[1], lookAtPosition[2]+p.y, 0.0, 1.0,
+			lookAtPosition[0]+camDeltaX, lookAtPosition[1], lookAtPosition[2]+camDeltaZ, 0.0, 1.0,
 			0.020);
 
 	// Rotate the plane of the elliptic
@@ -500,8 +513,11 @@ void mainMenu(GLint menuOption) {
 void PlanetMenu(GLint transOption) {
 	switch (transOption) {
 	case 1: {
+		p = solarSystem[1].getPosition();
 		// Select Mercury
 		std::cout<<"Mercury"<<std::endl;
+		camDeltaX = p.x;
+		camDeltaZ = p.y;
 	}
 		break;
 	case 2: {
