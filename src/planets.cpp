@@ -13,6 +13,7 @@
 #include <iostream>
 #include "planet.h"
 #include "position.h"
+#include "globals.h"
 
 namespace planet {
 
@@ -67,8 +68,8 @@ namespace planet {
 	position::Position Planet::getPosition() {
 		// calculate x,y using rcos(theta) and rsin(theta)
 		dh = calcDayHours();
-		position.x = p_distance*cos(360*p_doy/p_days);
-		position.y = p_distance*sin(360*p_doy/p_days);
+		position.x = p_distance*cos((360*dh.p_doy/p_days)*(PI/180));
+		position.y = p_distance*sin((360*dh.p_doy/p_days)*(PI/180));
 		return position;
 	}
 

@@ -320,14 +320,14 @@ void myDisplay(void)
 	glMatrixMode(GL_MODELVIEW);
 	// Clear the current matrix (Modelview)
 	glLoadIdentity();
-
+	position::Position p = solarSystem[1].getPosition();
 	gluLookAt(
 			lookAtPosition[0]
 					+ viewerDistance * sin(viewerZenith) * sin(viewerAzimuth),
-			lookAtPosition[1] + viewerDistance * cos(viewerZenith),
+			lookAtPosition[1] + 7.0 * cos(viewerZenith),
 			lookAtPosition[2]
 					+ viewerDistance * sin(viewerZenith) * cos(viewerAzimuth),
-			lookAtPosition[0], lookAtPosition[1], lookAtPosition[2], 0.0, 1.0,
+			lookAtPosition[0]+p.x, lookAtPosition[1], lookAtPosition[2]+p.y, 0.0, 1.0,
 			0.020);
 
 	// Rotate the plane of the elliptic
@@ -342,11 +342,6 @@ void myDisplay(void)
 			glPushMatrix();
 			solarSystem[t].draw();
 			glPopMatrix();
-		}
-
-		if (t==4) {
-			position::Position p = solarSystem[t].getPosition();
-			std::cout<< "x " << p.x << " y " << p.y << std::endl;
 		}
 		glDisable(GL_TEXTURE_2D);
 	}
