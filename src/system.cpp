@@ -177,7 +177,6 @@ void myKeyboard(unsigned char key, int x, int y) {
 	}
 	case 'x': {
 		viewerDistance += viewerDistanceIncrement;
-		sizeJupiter -= viewerDistanceIncrement;
 		if (viewerDistance > maximumViewerDistance)
 			viewerDistance = maximumViewerDistance;
 		break;
