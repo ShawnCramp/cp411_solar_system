@@ -16,7 +16,7 @@
 
 GLint moving = 0, xBegin = 0, coordinate = 1, type = 4, selected = 0, showing =
 		0, solar = 0, shading = 1, backface = 1, openbf = 0, D3 = 0,
-		lightOn = 0, style = 1,glslOption = 0;
+		lightOn = 0, style = 1, glslOption = 0;
 
 GLfloat xeye = 3.0, yeye = 3.0, zeye = 7.0;  //  Viewing-coordinate origin.
 GLfloat xref = 0.0, yref = 0.0, zref = 0.0;  //  Look-at point.
@@ -28,14 +28,25 @@ static GLenum singleStep = GL_FALSE;
 float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
 static float AnimateInc = 2.0;  // Time step for animation (hours)
 
+static float maximumViewerDistance = 60;
+static float minimumViewerDistance = 0;
+static float initialViewerDistance = 30;
+static float viewerDistanceIncrement = 1.0;
+static float initialViewerAzimuth = 0.0;
+static float initialViewerZenith = PI / 2.0;
+static float viewerAngleIncrement = PI / 135.0;
+static float lookAtPosition[] = { 0.0, 0.0, 0.0 };
+
 float viewerDistance = initialViewerDistance;
 float viewerAzimuth = initialViewerAzimuth;
 float viewerZenith = initialViewerZenith;
 
+static float earthSolarDay = 24.0;
+
 // Mercury
 static float doyMercury = 0.0;
 static float hodMercury = 0.0;
-static float daysMercury = 1.5005;
+static float daysMercury = 0.0625 * earthSolarDay;
 static float hoursMercury = 1407.5;
 static float distanceMercury = 3.0;
 static float moonsMercury = 0.0;
@@ -158,17 +169,6 @@ void myKeyboard(unsigned char key, int x, int y) {
 	glutIgnoreKeyRepeat(false);
 	// handle keyboard press
 	switch (key) {
-
-	case 'R':
-	case 'r':
-		Key_r();
-		break;
-	case 's':
-	case 'S':
-		Key_s();
-		break;
-	case 27:	// Escape key
-		exit(1);
 	case 'z': {
 		viewerDistance -= viewerDistanceIncrement;
 		if (viewerDistance < minimumViewerDistance)
@@ -182,7 +182,15 @@ void myKeyboard(unsigned char key, int x, int y) {
 			viewerDistance = maximumViewerDistance;
 		break;
 	}
-
+	case '+': {
+		earthSolarDay /= 2.0;
+		std::cout << earthSolarDay << std::endl;
+		break;
+	}
+	case '-': {
+		AnimateInc -= 20.0;
+		break;
+	}
 	}
 }
 
@@ -216,35 +224,35 @@ static void mySpecialKeyFunc(int pressedKey, int x, int y) {
 			viewerZenith = PI - viewerAngleIncrement;
 		break;
 	}
+
 	}
 }
+/*
+ static void Key_r(void) {
+ if (singleStep) {			// If ending single step mode
+ singleStep = GL_FALSE;
+ spinMode = GL_TRUE;		// Restart animation
+ } else {
+ spinMode = !spinMode;	// Toggle animation on and off.
+ }
+ }
 
-static void Key_r(void) {
-	if (singleStep) {			// If ending single step mode
-		singleStep = GL_FALSE;
-		spinMode = GL_TRUE;		// Restart animation
-	} else {
-		spinMode = !spinMode;	// Toggle animation on and off.
-	}
-}
+ static void Key_s(void) {
+ singleStep = GL_TRUE;
+ spinMode = GL_TRUE;
+ }
 
-static void Key_s(void) {
-	singleStep = GL_TRUE;
-	spinMode = GL_TRUE;
-}
+ static void Key_up(void) {
+ AnimateInc *= 2.0;			// Double the animation time step
+ }
 
-static void Key_up(void) {
-	AnimateInc *= 2.0;			// Double the animation time step
-}
+ static void Key_down(void) {
+ AnimateInc /= 2.0;			// Halve the animation time step
 
-static void Key_down(void) {
-	AnimateInc /= 2.0;			// Halve the animation time step
-
-}
-
+ }
+ */
 //<<<<<<<<<<<<<<<<<<<<<<< myDisplay >>>>>>>>>>>>>>>>>
-void myDisplay(void)
-{
+void myDisplay(void) {
 	glEnable(GL_LIGHTING);
 
 	glMatrixMode(GL_PROJECTION);
@@ -264,7 +272,7 @@ void myDisplay(void)
 					+ viewerDistance * sin(viewerZenith) * cos(viewerAzimuth),
 			lookAtPosition[0], lookAtPosition[1], lookAtPosition[2], 0.0, 1.0,
 			0.020);
-
+	//std::cout<<lookAtPosition[0]<<std::endl;
 	// Rotate the plane of the elliptic
 	// (rotate the model's plane about the x axis by fifteen degrees)
 	glRotatef(20.0, 1.0, 0.0, 0.0);
@@ -294,21 +302,20 @@ void myDisplay(void)
 
 }
 
-void initLights()
-{
-	   GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	   GLfloat mat_shininess[] = { 50.0 };
-	   GLfloat light_position[] = { 0.0, 0.0, 1.0, 0.0 };
-	   glClearColor (0.0, 0.0, 0.0, 0.0);
-	   glShadeModel (GL_SMOOTH);
+void initLights() {
+	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat mat_shininess[] = { 50.0 };
+	GLfloat light_position[] = { 0.0, 0.0, 1.0, 0.0 };
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glShadeModel(GL_SMOOTH);
 
-	   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-	   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-	   glEnable(GL_LIGHTING);
-	   glEnable(GL_LIGHT0);
-	   glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_DEPTH_TEST);
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<< myInit >>>>>>>>>>>>>>>>>>>>
@@ -378,10 +385,10 @@ void myInit(void) {
 	glLoadIdentity();
 	gluOrtho2D(0.0, WIDTH, 0.0, HEIGHT);
 
-	glShadeModel( GL_SMOOTH );
-	glClearColor(0.0f,0.0f,0.0f,0.0f); // background is white
-	glClearDepth( 1.0 );
-	glEnable( GL_DEPTH_TEST );
+	glShadeModel( GL_SMOOTH);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // background is white
+	glClearDepth(1.0);
+	glEnable( GL_DEPTH_TEST);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	initLights();
 }
@@ -400,7 +407,7 @@ static void ResizeWindow(int w, int h) {
 	gluPerspective(60.0, aspectRatio, 1.0, 30.0);
 
 	// Select the Modelview matrix
-	glMatrixMode( GL_MODELVIEW);
+	glMatrixMode(GL_MODELVIEW);
 }
 
 void spinner(void) { // alter angles by small amount
@@ -409,12 +416,11 @@ void spinner(void) { // alter angles by small amount
 	myDisplay();
 }
 
-
 void mainMenu(GLint menuOption) {
 	switch (menuOption) {
 	case 1: {
 		// temp
-		std::cout<<'Planet Menu'<<std::endl;
+		std::cout << 'Planet Menu' << std::endl;
 	}
 		break;
 	case 2:
@@ -423,64 +429,62 @@ void mainMenu(GLint menuOption) {
 	glutPostRedisplay();
 }
 
-
 void PlanetMenu(GLint transOption) {
 	switch (transOption) {
 	case 1: {
 		// Select Mercury
-		std::cout<<"Mercury"<<std::endl;
+		std::cout << "Mercury" << std::endl;
 	}
 		break;
 	case 2: {
 		// Select Venus
-		std::cout<<"Venus"<<std::endl;
+		std::cout << "Venus" << std::endl;
 	}
 		break;
 	case 3: {
 		// Select Earth
-		std::cout<<"Earth"<<std::endl;
+		std::cout << "Earth" << std::endl;
 	}
 		break;
 	case 4: {
 		// Select Mars
-		std::cout<<"Mars"<<std::endl;
+		std::cout << "Mars" << std::endl;
 	}
 		break;
 	case 5: {
 		// Select Jupiter
-		std::cout<<"Jupiter"<<std::endl;
+		std::cout << "Jupiter" << std::endl;
 
 	}
 		break;
 	case 6: {
 		// Select Saturn
-		std::cout<<"Saturn"<<std::endl;
+		std::cout << "Saturn" << std::endl;
 	}
 		break;
 	case 7: {
 		// Select Uranus
-		std::cout<<"Uranus"<<std::endl;
+		std::cout << "Uranus" << std::endl;
 	}
 		break;
 	case 8: {
 		// Neptune
-		std::cout<<"Neptune"<<std::endl;
+		std::cout << "Neptune" << std::endl;
 	}
 		break;
 	case 9: {
 		// Select Pluto
-		std::cout<<"Pluto"<<std::endl;
+		std::cout << "Pluto" << std::endl;
 	}
 	}
 	glutPostRedisplay();
 }
 
-
 void SectionMenu(GLint transOption) {
 	switch (transOption) {
 	case 1: {
 		// Select Inner
-		std::cout<<"Inner"<<std::endl;
+		std::cout << "Inner" << std::endl;
 		solarSystem[1].p_size = sizeMercury;
 		solarSystem[2].p_size = sizeVenus;
 		solarSystem[3].p_size = sizeEarth;
@@ -495,7 +499,7 @@ void SectionMenu(GLint transOption) {
 		break;
 	case 2: {
 		// Select Outer
-		std::cout<<"Outer"<<std::endl;
+		std::cout << "Outer" << std::endl;
 		solarSystem[1].p_size = 0.0;
 		solarSystem[2].p_size = 0.0;
 		solarSystem[3].p_size = 0.0;
@@ -510,7 +514,7 @@ void SectionMenu(GLint transOption) {
 		break;
 	case 3: {
 		// Select Entire
-		std::cout<<"Entire"<<std::endl;
+		std::cout << "Entire" << std::endl;
 		solarSystem[1].p_size = sizeMercury;
 		solarSystem[2].p_size = sizeVenus;
 		solarSystem[3].p_size = sizeEarth;
@@ -525,7 +529,6 @@ void SectionMenu(GLint transOption) {
 	}
 	glutPostRedisplay();
 }
-
 
 void myMenu() {
 	GLint planet_Menu, section_Menu, main_Menu;
@@ -552,7 +555,6 @@ void myMenu() {
 	glutAddMenuEntry(" Quit ", 2);
 
 }
-
 
 //<<<<<<<<<<<<<<<<<<<<<<<< main >>>>>>>>>>>>>>>>>>>>>>
 int main(int argc, char** argv) {
