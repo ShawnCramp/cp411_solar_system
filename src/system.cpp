@@ -131,8 +131,8 @@ planet::Planet neptune;
 planet::Planet pluto;
 std::vector<planet::Planet> solarSystem;
 
-position::Position p;
-
+bool followPlanet = false;
+int planetNum = 0;
 /**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
  * Author:	Shawn Cramp
  * ID:		111007290
@@ -188,11 +188,6 @@ void myKeyboard(unsigned char key, int x, int y) {
 		break;
 	}
 	case 'm': {
-		p = solarSystem[1].getPosition();
-		// Select Mercury
-		std::cout<<"Mercury"<<std::endl;
-		camDeltaX = p.x;
-		camDeltaZ = p.y;
 		break;
 	}
 
@@ -334,14 +329,27 @@ void myDisplay(void)
 	// Clear the current matrix (Modelview)
 	glLoadIdentity();
 
-	gluLookAt(
-			lookAtPosition[0]
-					+ viewerDistance * sin(viewerZenith) * sin(viewerAzimuth),
-			lookAtPosition[1] + viewerDistance * cos(viewerZenith),
-			lookAtPosition[2]
-					+ viewerDistance * sin(viewerZenith) * cos(viewerAzimuth),
-			lookAtPosition[0]+camDeltaX, lookAtPosition[1], lookAtPosition[2]+camDeltaZ, 0.0, 1.0,
-			0.020);
+	if (followPlanet) {
+		position::Position p = solarSystem[planetNum].getPosition();
+		gluLookAt(
+					lookAtPosition[0]
+							+ viewerDistance * sin(viewerZenith) * sin(viewerAzimuth),
+					lookAtPosition[1] + viewerDistance * cos(viewerZenith),
+					lookAtPosition[2]
+							+ viewerDistance * sin(viewerZenith) * cos(viewerAzimuth),
+					lookAtPosition[0]+p.x, lookAtPosition[1], lookAtPosition[2]+p.y, 0.0, 1.0,
+					0.020);
+	} else {
+		gluLookAt(
+				lookAtPosition[0]
+						+ viewerDistance * sin(viewerZenith) * sin(viewerAzimuth),
+				lookAtPosition[1] + viewerDistance * cos(viewerZenith),
+				lookAtPosition[2]
+						+ viewerDistance * sin(viewerZenith) * cos(viewerAzimuth),
+				lookAtPosition[0], lookAtPosition[1], lookAtPosition[2], 0.0, 1.0,
+				0.020);
+	}
+
 
 	// Rotate the plane of the elliptic
 	// (rotate the model's plane about the x axis by fifteen degrees)
@@ -500,7 +508,7 @@ void mainMenu(GLint menuOption) {
 	switch (menuOption) {
 	case 1: {
 		// temp
-		std::cout<<'Planet Menu'<<std::endl;
+		std::cout<<"Planet Menu"<<std::endl;
 	}
 		break;
 	case 2:
@@ -511,55 +519,70 @@ void mainMenu(GLint menuOption) {
 
 
 void PlanetMenu(GLint transOption) {
+	followPlanet = true;
 	switch (transOption) {
 	case 1: {
-		p = solarSystem[1].getPosition();
 		// Select Mercury
 		std::cout<<"Mercury"<<std::endl;
-		camDeltaX = p.x;
-		camDeltaZ = p.y;
+		planetNum = 1;
 	}
 		break;
 	case 2: {
 		// Select Venus
 		std::cout<<"Venus"<<std::endl;
+		planetNum = 2;
 	}
 		break;
 	case 3: {
 		// Select Earth
 		std::cout<<"Earth"<<std::endl;
+		planetNum = 3;
 	}
 		break;
 	case 4: {
 		// Select Mars
 		std::cout<<"Mars"<<std::endl;
+		planetNum = 4;
 	}
 		break;
 	case 5: {
 		// Select Jupiter
 		std::cout<<"Jupiter"<<std::endl;
+		planetNum = 5;
 
 	}
 		break;
 	case 6: {
 		// Select Saturn
 		std::cout<<"Saturn"<<std::endl;
+		planetNum = 6;
 	}
 		break;
 	case 7: {
 		// Select Uranus
 		std::cout<<"Uranus"<<std::endl;
+		planetNum = 7;
 	}
 		break;
 	case 8: {
 		// Neptune
 		std::cout<<"Neptune"<<std::endl;
+		planetNum = 8;
 	}
 		break;
 	case 9: {
 		// Select Pluto
 		std::cout<<"Pluto"<<std::endl;
+		planetNum = 9;
 	}
+		break;
+	case 10: {
+		// Select Pluto
+		std::cout<<"Pluto"<<std::endl;
+		planetNum = 0;
+		followPlanet = false;
+	}
+		break;
 	}
 	glutPostRedisplay();
 }
@@ -629,6 +652,7 @@ void myMenu() {
 	glutAddMenuEntry(" Uranus ", 7);
 	glutAddMenuEntry(" Neptune ", 8);
 	glutAddMenuEntry(" Pluto ", 9);
+	glutAddMenuEntry(" Unfollow ", 10);
 
 	section_Menu = glutCreateMenu(SectionMenu);
 	glutAddMenuEntry(" Inner ", 1);
