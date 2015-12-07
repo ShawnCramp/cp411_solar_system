@@ -27,7 +27,7 @@ static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
 // These three variables control the animation's state and speed.
 float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
-static float AnimateInc = 2.0;  // Time step for animation (hours)
+static float AnimateInc = 25.0;  // Time step for animation (hours)
 
 float viewerDistance = initialViewerDistance;
 float viewerAzimuth = initialViewerAzimuth;
@@ -337,7 +337,7 @@ void myDisplay(void)
 					lookAtPosition[1] + viewerDistance * cos(viewerZenith),
 					lookAtPosition[2]
 							+ viewerDistance * sin(viewerZenith) * cos(viewerAzimuth),
-					lookAtPosition[0]+p.x, lookAtPosition[1], lookAtPosition[2]+p.y, 0.0, 1.0,
+					lookAtPosition[0]+p.x, lookAtPosition[1]+p.y, lookAtPosition[2], 0.0, 1.0,
 					0.020);
 	} else {
 		gluLookAt(
@@ -524,6 +524,8 @@ void PlanetMenu(GLint transOption) {
 	case 1: {
 		// Select Mercury
 		std::cout<<"Mercury"<<std::endl;
+		viewerDistance =15.0;
+		viewerZenith = 0.994838;
 		planetNum = 1;
 	}
 		break;
@@ -531,37 +533,48 @@ void PlanetMenu(GLint transOption) {
 		// Select Venus
 		std::cout<<"Venus"<<std::endl;
 		planetNum = 2;
+		viewerDistance =14.0;
+		viewerZenith =1.20428;
 	}
 		break;
 	case 3: {
 		// Select Earth
 		std::cout<<"Earth"<<std::endl;
 		planetNum = 3;
+		viewerDistance =14.0;
+		viewerZenith =1.20428;
 	}
 		break;
 	case 4: {
 		// Select Mars
 		std::cout<<"Mars"<<std::endl;
 		planetNum = 4;
+		viewerDistance =17.0;
+		viewerZenith =1.41372;
 	}
 		break;
 	case 5: {
 		// Select Jupiter
 		std::cout<<"Jupiter"<<std::endl;
 		planetNum = 5;
-
+		viewerDistance =29.0;
+		viewerZenith =1.41372;
 	}
 		break;
 	case 6: {
 		// Select Saturn
 		std::cout<<"Saturn"<<std::endl;
 		planetNum = 6;
+		viewerDistance =33.0;
+		viewerZenith =0.680679;
 	}
 		break;
 	case 7: {
 		// Select Uranus
 		std::cout<<"Uranus"<<std::endl;
 		planetNum = 7;
+		viewerDistance =33.0;
+		viewerZenith =0.680679;
 	}
 		break;
 	case 8: {
