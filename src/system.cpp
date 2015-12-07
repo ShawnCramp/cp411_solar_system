@@ -10,6 +10,7 @@
 #include "RGBpixmap.h"
 #include "planet.h"
 #include "globals.h"
+#include "position.h"
 
 #define WIDTH 1024
 #define HEIGHT 768
@@ -341,6 +342,11 @@ void myDisplay(void)
 			glPushMatrix();
 			solarSystem[t].draw();
 			glPopMatrix();
+		}
+
+		if (t==4) {
+			position::Position p = solarSystem[t].getPosition();
+			std::cout<< "x " << p.x << " y " << p.y << std::endl;
 		}
 		glDisable(GL_TEXTURE_2D);
 	}

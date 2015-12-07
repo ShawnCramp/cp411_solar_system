@@ -6,7 +6,7 @@
  */
 #include <map>
 #include <string>
-
+#include "position.h"
 #ifndef SRC_PLANETS_H_
 #define SRC_PLANETS_H_
 
@@ -15,15 +15,16 @@ namespace planet {
 	public:
 		float p_hod, p_doy, p_days, p_hours, p_distance, p_moons, p_size, p_animateInc, p_yAngle;
 		int p_textureID;
-		float cur_x, cur_z;
+		position::Position position;
+		position:: DayHours dh;
 		Planet(float hod, float doy, float days, float hours, float distance,
 				float moons, float size, float animateInc, float yAngle, int textureID);
 		Planet();
 		Planet(int textureID, float size);
 		void draw();
 		void drawSun();
-		float getCurX();
-		float getCurZ();
+		position::Position getPosition();
+		position::DayHours calcDayHours();
 	};
 }
 
