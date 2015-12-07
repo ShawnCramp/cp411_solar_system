@@ -26,7 +26,9 @@ namespace planet {
 		  p_size(0),
 		  p_animateInc(0),
 		  p_yAngle(0),
-		  p_textureID(0	)
+		  p_textureID(0),
+		  cur_x(0),
+		  cur_z(0)
 	{
 
 	}
@@ -43,7 +45,9 @@ namespace planet {
 		  p_size(size),
 		  p_animateInc(animateInc),
 		  p_yAngle(yAngle),
-		  p_textureID(textureID)
+		  p_textureID(textureID),
+		  cur_x(0),
+		  cur_z(0)
 	{
 
 	}
@@ -58,11 +62,30 @@ namespace planet {
 		  p_size(size),
 		  p_animateInc(0),
 		  p_yAngle(0),
-		  p_textureID(textureID)
+		  p_textureID(textureID),
+		  cur_x(0),
+		  cur_z(0)
 	{
 
 	}
 
+	float Planet::getCurX() {
+		p_hod += p_animateInc;
+		p_doy += p_animateInc / p_hours;
+
+		p_hod = p_hod - ((int)(p_hod / p_hours)) * p_hours;
+		p_doy = p_doy - ((int)(p_doy / p_days)) * p_days;
+		return cos(360*p_doy/p_days);
+	}
+
+	float Planet::getCurZ() {
+		p_hod += p_animateInc;
+		p_doy += p_animateInc / p_hours;
+
+		p_hod = p_hod - ((int)(p_hod / p_hours)) * p_hours;
+		p_doy = p_doy - ((int)(p_doy / p_days)) * p_days;
+		return sin(360*p_doy/p_days);
+	}
 
 	void Planet::draw() {
 		p_hod += p_animateInc;
@@ -71,7 +94,7 @@ namespace planet {
 		p_hod = p_hod - ((int)(p_hod / p_hours)) * p_hours;
 		p_doy = p_doy - ((int)(p_doy / p_days)) * p_days;
 
-		glRotatef( 720.0*p_doy/p_days, 0.0, 1.0, 0.0 ); //rotates earth around the sun
+		glRotatef( 360.0*p_doy/p_days, 0.0, 1.0, 0.0 ); //rotates earth around the sun
 		glColor4f(1.f, 1.f, 1.f, 1.f); //reset the drawing color from yellow(sun) to white
 
 		GLUquadricObj* quadro = gluNewQuadric();
