@@ -26,14 +26,15 @@ namespace planet {
 		  p_size(0),
 		  p_animateInc(0),
 		  p_yAngle(0),
-		  p_textureID(0	)
+		  p_textureID(0),
+		  p_moonTex(0)
 	{
 
 	}
 
 	/* Constructor */
 	Planet::Planet(float hod, float doy, float days, float hours, float distance,
-			float moons, float size, float animateInc, float yAngle, int textureID)
+			float moons, float size, float animateInc, float yAngle, int textureID, int moonTex)
 		: p_hod(hod),
 		  p_doy(doy),
 		  p_days(days),
@@ -43,12 +44,13 @@ namespace planet {
 		  p_size(size),
 		  p_animateInc(animateInc),
 		  p_yAngle(yAngle),
-		  p_textureID(textureID)
+		  p_textureID(textureID),
+		  p_moonTex(moonTex)
 	{
 
 	}
 
-	Planet::Planet(int textureID, float size)
+	Planet::Planet(int textureID, int moonTex, float size)
 		: p_hod(0),
 		  p_doy(0),
 		  p_days(0),
@@ -58,7 +60,8 @@ namespace planet {
 		  p_size(size),
 		  p_animateInc(0),
 		  p_yAngle(0),
-		  p_textureID(textureID)
+		  p_textureID(textureID),
+		  p_moonTex(moonTex)
 	{
 
 	}
@@ -71,33 +74,54 @@ namespace planet {
 		p_hod = p_hod - ((int)(p_hod / p_hours)) * p_hours;
 		p_doy = p_doy - ((int)(p_doy / p_days)) * p_days;
 
-		glRotatef( 720.0*p_doy/p_days, 0.0, 1.0, 0.0 ); //rotates earth around the sun
+		glRotatef( (720.0 * p_doy/p_days) , 0.0, 1.0, 0.0 ); //rotates earth around the sun
+		//glRotatef(0, 0, 1, 0);
 		glColor4f(1.f, 1.f, 1.f, 1.f); //reset the drawing color from yellow(sun) to white
 
 		GLUquadricObj* quadro = gluNewQuadric();
 		gluQuadricNormals(quadro, GLU_SMOOTH);
 		gluQuadricTexture(quadro, GL_TRUE);
 		glPushMatrix();
-			glTranslatef(p_distance, 0.0, 0.0 );
-			glRotated(360*p_hod/p_hours,0.0,1.0,0.0); //actual rotation
-			glRotatef( -90.0, 1.0, 0.0, 0.0 );
-			glBindTexture(GL_TEXTURE_2D, p_textureID);
+		glTranslatef(p_distance, 0.0, 0.0 );
+		glRotated(360*p_hod/p_hours,0.0,1.0,0.0); //actual rotation
+		//glRotated(0, 0, 1, 0);
+		glRotatef( -90.0, 1.0, 0.0, 0.0 );
+		glBindTexture(GL_TEXTURE_2D, p_textureID);
+		gluSphere(quadro, p_size, 48, 48);
 
-			// If Saturn, Draw Ring
-			if (p_size == 2.5) {
-				gluDisk(quadro, 2.8, 4, 100, 100);
-			}
+		// If Saturn, Draw Ring
+		if (p_size == 2.5) {
+			gluDisk(quadro, 2.8, 4, 100, 100);
+		}
 
-			// Draw Moons
-			glPushMatrix();
-			glTranslatef(1, 0.0, 0.0);
+		// Draw Moons
+		if (p_moons > 0) {
+			float j = 1.0;
 			for (int i = 0; i < p_moons; i++) {
-				gluSphere(quadro, 0.1, 48, 48);
+
+				glPushMatrix();
+
+				glRotatef( (720.0 * p_doy / p_days) * -100 , 0.0, 1.0, 0.0 );
+				//glRotatef(0, 0, 1, 0);
+
+				glTranslatef(p_size + (p_size*0.25*j), 0.0 , 0.0);
+
+				glRotatef(360.0 * p_hod / 24.0 , 0.0, 1.0, 0.0);
+				//glRotatef(0, 0, 1, 0);
+
+				glBindTexture(GL_TEXTURE_2D, p_moonTex);
+
+				gluSphere( quadro, 0.1, 48, 48);
+
+				glPopMatrix();
+
+				j = -j;
+
 			}
-			glPopMatrix();
 
 
-			gluSphere(quadro, p_size, 48, 48);
+		}
+
 		glPopMatrix();
 
 		GLUquadricObj* x = quadro;
