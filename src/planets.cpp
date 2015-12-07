@@ -82,8 +82,28 @@ namespace planet {
 			glRotated(360*p_hod/p_hours,0.0,1.0,0.0); //actual rotation
 			glRotatef( -90.0, 1.0, 0.0, 0.0 );
 			glBindTexture(GL_TEXTURE_2D, p_textureID);
+
+			// If Saturn, Draw Ring
+			if (p_size == 2.5) {
+				gluDisk(quadro, 2.8, 4, 100, 100);
+			}
+
+			// Draw Moons
+			glPushMatrix();
+			glTranslatef(1, 0.0, 0.0);
+			for (int i = 0; i < p_moons; i++) {
+				gluSphere(quadro, 0.1, 48, 48);
+			}
+			glPopMatrix();
+
+
 			gluSphere(quadro, p_size, 48, 48);
 		glPopMatrix();
+
+		GLUquadricObj* x = quadro;
+
+		std::cout<<x<<std::endl;
+
 		gluDeleteQuadric(quadro);
 	}
 

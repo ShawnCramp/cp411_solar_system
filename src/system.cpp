@@ -48,7 +48,7 @@ static float daysVenus = 0.9259;
 static float hoursVenus = 5832.0;
 static float distanceVenus = 4.0;
 static float moonsVenus = 0.0;
-static float sizeVenus = 0.3;
+static float sizeVenus = 0.6;
 
 // Earth
 static float hodEarth = 0.0;
@@ -57,7 +57,7 @@ static float daysEarth = 365.0;
 static float hoursEarth = 24.0;
 static float distanceEarth = 7.0;
 static float moonsEarth = 1.0;
-static float sizeEarth = 0.6;
+static float sizeEarth = 0.8;
 
 // Mars
 static float doyMars = 0.0;
@@ -66,7 +66,7 @@ static float daysMars = 672.98;
 static float hoursMars = 24.5;
 static float distanceMars = 10.0;
 static float moonsMars = 0.0;
-static float sizeMars = 0.6;
+static float sizeMars = 0.4;
 
 // Jupiter
 static float doyJupiter = 0.0;
@@ -75,7 +75,7 @@ static float daysJupiter = 10469.46;
 static float hoursJupiter = 9.925;
 static float distanceJupiter = 16.0;
 static float moonsJupiter = 0.0;
-static float sizeJupiter = 4.0;
+static float sizeJupiter = 3.0;
 
 // Saturn
 static float doySaturn = 0.0;
@@ -84,7 +84,7 @@ static float daysSaturn = 24475.95;
 static float hoursSaturn = 10.55;
 static float distanceSaturn = 24.0;
 static float moonsSaturn = 0.0;
-static float sizeSaturn = 2.0;
+static float sizeSaturn = 2.5;
 
 // Uranus
 static float doyUranus = 0.0;
@@ -92,8 +92,8 @@ static float hodUranus = 0.0;
 static float daysUranus = 43324.94;
 static float hoursUranus = 17.2;
 static float distanceUranus = 30.0;
-static float moonsUranus = 0.0;
-static float sizeUranus = 2.0;
+static float moonsUranus = 1.0;
+static float sizeUranus = 1.3;
 
 // Neptune
 static float doyNeptune = 0.0;
@@ -102,7 +102,7 @@ static float daysNeptune = 89649.93;
 static float hoursNeptune = 16.11;
 static float distanceNeptune = 36.0;
 static float moonsNeptune = 0.0;
-static float sizeNeptune = 2.0;
+static float sizeNeptune = 1.2;
 
 // Pluto
 static float doyPluto = 0.0;
