@@ -100,6 +100,13 @@ namespace planet {
 			glBindTexture(GL_TEXTURE_2D, p_textureID);
 			gluSphere(quadro, p_size, 48, 48);
 		glPopMatrix();
+		if (p_moons>0){
+			glTranslatef(p_distance, 0.0, 0.0 );
+		glRotatef( 360.0*12.0*dh.p_doy/p_days, 0.0, 1.0, 0.0 );
+		   glTranslatef(p_size+ 1.7, 0.0, 0.0 );
+		    glColor3f( 0.3, 0.7, 0.3 );
+		    glutWireSphere( 0.1, 5, 5 );
+		}
 		gluDeleteQuadric(quadro);
 	}
 
