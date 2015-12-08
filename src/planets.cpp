@@ -28,14 +28,15 @@ namespace planet {
 		  p_size(0),
 		  p_animateInc(0),
 		  p_yAngle(0),
-		  p_textureID(0)
+		  p_textureID(0),
+		  p_moonTex(0)
 	{
 
 	}
 
 	/* Constructor */
 	Planet::Planet(float hod, float doy, float days, float hours, float distance,
-			float moons, float size, float animateInc, float yAngle, int textureID)
+			float moons, float size, float animateInc, float yAngle, int textureID, int moonTex)
 		: p_hod(hod),
 		  p_doy(doy),
 		  p_days(days),
@@ -45,12 +46,13 @@ namespace planet {
 		  p_size(size),
 		  p_animateInc(animateInc),
 		  p_yAngle(yAngle),
-		  p_textureID(textureID)
+		  p_textureID(textureID),
+		  p_moonTex(moonTex)
 	{
 
 	}
 
-	Planet::Planet(int textureID, float size)
+	Planet::Planet(int textureID, int moonTex, float size)
 		: p_hod(0),
 		  p_doy(0),
 		  p_days(0),
@@ -60,7 +62,8 @@ namespace planet {
 		  p_size(size),
 		  p_animateInc(0),
 		  p_yAngle(0),
-		  p_textureID(textureID)
+		  p_textureID(textureID),
+		  p_moonTex(moonTex)
 	{
 
 	}
@@ -113,11 +116,15 @@ namespace planet {
 						glRotatef( 360.0*(months-(2.5*i))*dh.p_doy/p_days, 0.0, 1.0, 0.0 );
 						glTranslatef(p_size+ 0.8, 0.0, 0.0 );
 					}
-					glColor3f( 0.3, 0.7, 0.3 );
-					glutWireSphere( 0.1, 5, 5 );
+					glBindTexture(GL_TEXTURE_2D, p_moonTex);
+					gluSphere( quadro, 0.1, 48, 48);
 					glPopMatrix();
 				}
 			}
+		// If Saturn, Draw Ring
+		if (p_size == 2.5) {
+			gluDisk(quadro, 2.8, 4, 100, 100);
+		}
 		gluDeleteQuadric(quadro);
 	}
 
