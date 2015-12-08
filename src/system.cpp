@@ -10,13 +10,14 @@
 #include "RGBpixmap.h"
 #include "planet.h"
 #include "globals.h"
+#include "position.h"
 
 #define WIDTH 1024
 #define HEIGHT 768
 
 GLint moving = 0, xBegin = 0, coordinate = 1, type = 4, selected = 0, showing =
 		0, solar = 0, shading = 1, backface = 1, openbf = 0, D3 = 0,
-		lightOn = 0, style = 1,glslOption = 0;
+		lightOn = 0, style = 1, glslOption = 0;
 
 GLfloat xeye = 3.0, yeye = 3.0, zeye = 7.0;  //  Viewing-coordinate origin.
 GLfloat xref = 0.0, yref = 0.0, zref = 0.0;  //  Look-at point.
@@ -26,95 +27,95 @@ static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
 // These three variables control the animation's state and speed.
 float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
-static float AnimateInc = 2.0;  // Time step for animation (hours)
+static float AnimateInc = 12.0;  // Time step for animation (hours)
 
 float viewerDistance = initialViewerDistance;
 float viewerAzimuth = initialViewerAzimuth;
 float viewerZenith = initialViewerZenith;
-
-// Mercury
-static float doyMercury = 0.0;
-static float hodMercury = 0.0;
-static float daysMercury = 1.5005;
-static float hoursMercury = 1407.5;
-static float distanceMercury = 3.0;
-static float moonsMercury = 0.0;
-static float sizeMercury = 0.2;
-
-// Venus
-static float doyVenus = 0.0;
-static float hodVenus = 0.0;
-static float daysVenus = 0.9259;
-static float hoursVenus = 5832.0;
-static float distanceVenus = 4.0;
-static float moonsVenus = 0.0;
-static float sizeVenus = 0.3;
 
 // Earth
 static float hodEarth = 0.0;
 static float doyEarth = 0.0;
 static float daysEarth = 365.0;
 static float hoursEarth = 24.0;
-static float distanceEarth = 7.0;
+static float distanceEarth = 30.0;
 static float moonsEarth = 1.0;
-static float sizeEarth = 0.6;
+static float sizeEarth = 1.8;
+
+// Mercury
+static float doyMercury = 0.0;
+static float hodMercury = 0.0;
+static float daysMercury = 1.5005;
+static float hoursMercury = 1407.5;
+static float distanceMercury = 0.387 * distanceEarth;
+static float moonsMercury = 0.0;
+static float sizeMercury = sizeEarth*0.38;
+
+// Venus
+static float doyVenus = 0.0;
+static float hodVenus = 0.0;
+static float daysVenus = 0.9259;
+static float hoursVenus = 5832.0;
+static float distanceVenus = distanceEarth * 0.722;
+static float moonsVenus = 0.0;
+static float sizeVenus = sizeEarth*0.95;
 
 // Mars
 static float doyMars = 0.0;
 static float hodMars = 0.0;
 static float daysMars = 672.98;
 static float hoursMars = 24.5;
-static float distanceMars = 10.0;
-static float moonsMars = 0.0;
-static float sizeMars = 0.6;
+static float distanceMars = distanceEarth * 1.52;
+static float moonsMars = 2.0;
+static float sizeMars = sizeEarth*0.53;
 
 // Jupiter
 static float doyJupiter = 0.0;
 static float hodJupiter = 0.0;
 static float daysJupiter = 10469.46;
 static float hoursJupiter = 9.925;
-static float distanceJupiter = 16.0;
-static float moonsJupiter = 0.0;
-static float sizeJupiter = 4.0;
+static float distanceJupiter = distanceEarth * 5.2;
+static float moonsJupiter = 4.0;
+static float sizeJupiter = sizeEarth*10;
 
 // Saturn
 static float doySaturn = 0.0;
 static float hodSaturn = 0.0;
 static float daysSaturn = 24475.95;
 static float hoursSaturn = 10.55;
-static float distanceSaturn = 24.0;
-static float moonsSaturn = 0.0;
-static float sizeSaturn = 2.0;
+static float distanceSaturn = distanceEarth * 9.58;
+static float moonsSaturn = 8.0;
+static float sizeSaturn = sizeEarth*8.33;
 
 // Uranus
 static float doyUranus = 0.0;
 static float hodUranus = 0.0;
 static float daysUranus = 43324.94;
 static float hoursUranus = 17.2;
-static float distanceUranus = 30.0;
-static float moonsUranus = 0.0;
-static float sizeUranus = 2.0;
+static float distanceUranus = distanceEarth * 19.2;
+static float moonsUranus = 5.0;
+static float sizeUranus = sizeEarth*3.63;
 
 // Neptune
 static float doyNeptune = 0.0;
 static float hodNeptune = 0.0;
 static float daysNeptune = 89649.93;
 static float hoursNeptune = 16.11;
-static float distanceNeptune = 36.0;
-static float moonsNeptune = 0.0;
-static float sizeNeptune = 2.0;
+static float distanceNeptune = distanceEarth*30.1;
+static float moonsNeptune = 2.0;
+static float sizeNeptune = sizeEarth*3.52;
 
 // Pluto
 static float doyPluto = 0.0;
 static float hodPluto = 0.0;
 static float daysPluto = 14181.75;
 static float hoursPluto = 153.29;
-static float distancePluto = 40.0;
-static float moonsPluto = 0.0;
-static float sizePluto = 0.4;
+static float distancePluto = distanceEarth * 39.5;
+static float moonsPluto = 1.0;
+static float sizePluto = sizeEarth*0.18;
 
 /* Global containers */
-RGBpixmap pix[11]; // make ten (empty) pixmaps
+RGBpixmap pix[12]; // make ten (empty) pixmaps
 planet::Planet sun;
 planet::Planet mercury;
 planet::Planet venus;
@@ -127,6 +128,8 @@ planet::Planet neptune;
 planet::Planet pluto;
 std::vector<planet::Planet> solarSystem;
 
+bool followPlanet = false;
+int planetNum = 0;
 /**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
  * Author:	Shawn Cramp
  * ID:		111007290
@@ -179,6 +182,9 @@ void myKeyboard(unsigned char key, int x, int y) {
 		viewerDistance += viewerDistanceIncrement;
 		if (viewerDistance > maximumViewerDistance)
 			viewerDistance = maximumViewerDistance;
+		break;
+	}
+	case 'm': {
 		break;
 	}
 
@@ -243,17 +249,18 @@ static void Key_down(void) {
 
 void drawSkybox(void) {
 		// Front side
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+		glBindTexture(GL_TEXTURE_2D, 11);
+
 		glPushMatrix();
-		glBegin(GL_POLYGON);
-		glBindTexture(GL_TEXTURE_2D, 4);
-		glTexCoord2f(30.0, 30.0);
-		glVertex3f( -30.5, -30.5, -30.5);       // P1
-		glTexCoord2f(30.0, 0.0);
-		glVertex3f( -30.5,  30.5, -30.5);       // P2
-		glTexCoord2f(0.0, 0.0);
-		glVertex3f(  30.5,  30.5, -30.5);       // P3
-		glTexCoord2f(0.0, 30.0);
-		glVertex3f(  30.5, -30.5, -30.5);       // P4
+		glBegin(GL_QUADS);
+
+		glTexCoord2f(0.0, 0.0); glVertex3f( -30.0, -30.0, -30.0);       // P1
+		glTexCoord2f(0.0, 1.0); glVertex3f( -30.0,  30.0, -30.0);       // P2
+		glTexCoord2f(1.0, 1.0); glVertex3f(  30.0,  30.0, -30.0);       // P3
+		glTexCoord2f(1.0, 0.0);	glVertex3f(  30.0, -30.0, -30.0);       // P4
+
 		glEnd();
 		glPopMatrix();
 
@@ -305,29 +312,41 @@ void drawSkybox(void) {
 		*/
 }
 
-
 //<<<<<<<<<<<<<<<<<<<<<<< myDisplay >>>>>>>>>>>>>>>>>
-void myDisplay(void)
-{
+void myDisplay(void) {
 	glEnable(GL_LIGHTING);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(60.0, WIDTH / HEIGHT, 0.2, 100.0);
+	gluPerspective(60.0, WIDTH / HEIGHT, 0.2, 2000.0);
 	// Clear the rendering window
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	// Clear the current matrix (Modelview)
 	glLoadIdentity();
 
-	gluLookAt(
-			lookAtPosition[0]
-					+ viewerDistance * sin(viewerZenith) * sin(viewerAzimuth),
-			lookAtPosition[1] + viewerDistance * cos(viewerZenith),
-			lookAtPosition[2]
-					+ viewerDistance * sin(viewerZenith) * cos(viewerAzimuth),
-			lookAtPosition[0], lookAtPosition[1], lookAtPosition[2], 0.0, 1.0,
-			0.020);
+	if (followPlanet) {
+		position::Position p = solarSystem[planetNum].getPosition();
+		gluLookAt(
+				lookAtPosition[0]
+						+ viewerDistance * sin(viewerZenith)
+								* sin(viewerAzimuth),
+				lookAtPosition[1] + viewerDistance * cos(viewerZenith),
+				lookAtPosition[2]
+						+ viewerDistance * sin(viewerZenith)
+								* cos(viewerAzimuth), lookAtPosition[0] + p.x,
+				lookAtPosition[1] + p.y, lookAtPosition[2], 0.0, 1.0, 0.020);
+	} else {
+		gluLookAt(
+				lookAtPosition[0]
+						+ viewerDistance * sin(viewerZenith)
+								* sin(viewerAzimuth),
+				lookAtPosition[1] + viewerDistance * cos(viewerZenith),
+				lookAtPosition[2]
+						+ viewerDistance * sin(viewerZenith)
+								* cos(viewerAzimuth), lookAtPosition[0],
+				lookAtPosition[1], lookAtPosition[2], 0.0, 1.0, 0.020);
+	}
 
 	// Rotate the plane of the elliptic
 	// (rotate the model's plane about the x axis by fifteen degrees)
@@ -345,10 +364,10 @@ void myDisplay(void)
 		glDisable(GL_TEXTURE_2D);
 	}
 
-	// Draw Skybox
-	glEnable(GL_TEXTURE_2D);
-	drawSkybox();
-	glDisable(GL_TEXTURE_2D);
+//	// Draw Skybox
+//	glEnable(GL_TEXTURE_2D);
+//	drawSkybox();
+//	glDisable(GL_TEXTURE_2D);
 
 	// Flush the pipeline, and swap the buffers
 	glDisable(GL_LIGHTING);
@@ -363,44 +382,43 @@ void myDisplay(void)
 
 }
 
-void initLights()
-{
-	   GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	   GLfloat mat_shininess[] = { 50.0 };
-	   GLfloat light_position[] = { 0.0, 0.0, 1.0, 0.0 };
-	   glClearColor (0.0, 0.0, 0.0, 0.0);
-	   glShadeModel (GL_SMOOTH);
+void initLights() {
+	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat mat_shininess[] = { 50.0 };
+	GLfloat light_position[] = { 0.0, 0.0, 1.0, 0.0 };
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glShadeModel(GL_SMOOTH);
 
-	   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-	   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-	   glEnable(GL_LIGHTING);
-	   glEnable(GL_LIGHT0);
-	   glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_DEPTH_TEST);
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<< myInit >>>>>>>>>>>>>>>>>>>>
 void myInit(void) {
-	sun = planet::Planet(1, 2.0);
+	sun = planet::Planet(1, 10.0);
 	mercury = planet::Planet(doyMercury, hodMercury, daysMercury, hoursMercury,
-			distanceMercury, moonsMercury, sizeMercury, AnimateInc, yAngle, 2);
+			distanceMercury, moonsMercury, sizeMercury, AnimateInc, yAngle, 2, 12);
 	venus = planet::Planet(doyVenus, hodVenus, daysVenus, hoursVenus,
-			distanceVenus, moonsVenus, sizeVenus, AnimateInc, yAngle, 3);
+			distanceVenus, moonsVenus, sizeVenus, AnimateInc, yAngle, 3, 12);
 	earth = planet::Planet(doyEarth, hodEarth, daysEarth, hoursEarth,
-			distanceEarth, moonsEarth, sizeEarth, AnimateInc, yAngle, 4);
+			distanceEarth, moonsEarth, sizeEarth, AnimateInc, yAngle, 4, 12);
 	mars = planet::Planet(doyMars, hodMars, daysMars, hoursMars, distanceMars,
-			moonsMars, sizeMars, AnimateInc, yAngle, 5);
+			moonsMars, sizeMars, AnimateInc, yAngle, 5, 12);
 	jupiter = planet::Planet(doyJupiter, hodJupiter, daysJupiter, hoursJupiter,
-			distanceJupiter, moonsJupiter, sizeJupiter, AnimateInc, yAngle, 6);
+			distanceJupiter, moonsJupiter, sizeJupiter, AnimateInc, yAngle, 6, 12);
 	saturn = planet::Planet(doySaturn, hodSaturn, daysSaturn, hoursSaturn,
-			distanceSaturn, moonsSaturn, sizeSaturn, AnimateInc, yAngle, 7);
+			distanceSaturn, moonsSaturn, sizeSaturn, AnimateInc, yAngle, 7, 12);
 	uranus = planet::Planet(doyUranus, hodUranus, daysUranus, hoursUranus,
-			distanceUranus, moonsUranus, sizeUranus, AnimateInc, yAngle, 8);
+			distanceUranus, moonsUranus, sizeUranus, AnimateInc, yAngle, 8, 12);
 	neptune = planet::Planet(doyNeptune, hodNeptune, daysNeptune, hoursNeptune,
-			distanceNeptune, moonsNeptune, sizeNeptune, AnimateInc, yAngle, 9);
+			distanceNeptune, moonsNeptune, sizeNeptune, AnimateInc, yAngle, 9, 12);
 	pluto = planet::Planet(doyPluto, hodPluto, daysPluto, hoursPluto,
-			distancePluto, moonsPluto, sizePluto, AnimateInc, yAngle, 10);
+			distancePluto, moonsPluto, sizePluto, AnimateInc, yAngle, 10, 12);
 
 	solarSystem.push_back(sun);
 	solarSystem.push_back(mercury);
@@ -446,14 +464,17 @@ void myInit(void) {
 	pix[11].parseFile("images/stars.txt");
 	pix[11].setTexture(11); // skybox texture
 
+	pix[12].parseFile("images/kaiokenx4.txt");
+	pix[12].setTexture(12); // moon texture
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(0.0, WIDTH, 0.0, HEIGHT);
 
-	glShadeModel( GL_SMOOTH );
-	glClearColor(0.0f,0.0f,0.0f,0.0f); // background is white
-	glClearDepth( 1.0 );
-	glEnable( GL_DEPTH_TEST );
+	glShadeModel( GL_SMOOTH);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // background is white
+	glClearDepth(1.0);
+	glEnable( GL_DEPTH_TEST);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	initLights();
 }
@@ -481,12 +502,11 @@ void spinner(void) { // alter angles by small amount
 	myDisplay();
 }
 
-
 void mainMenu(GLint menuOption) {
 	switch (menuOption) {
 	case 1: {
 		// temp
-		std::cout<<'Planet Menu'<<std::endl;
+		std::cout << "Planet Menu" << std::endl;
 	}
 		break;
 	case 2:
@@ -495,64 +515,93 @@ void mainMenu(GLint menuOption) {
 	glutPostRedisplay();
 }
 
-
 void PlanetMenu(GLint transOption) {
+	followPlanet = true;
 	switch (transOption) {
 	case 1: {
 		// Select Mercury
-		std::cout<<"Mercury"<<std::endl;
+		std::cout << "Mercury" << std::endl;
+		viewerDistance = 15.0;
+		viewerZenith = 0.994838;
+		planetNum = 1;
 	}
 		break;
 	case 2: {
 		// Select Venus
-		std::cout<<"Venus"<<std::endl;
+		std::cout << "Venus" << std::endl;
+		planetNum = 2;
+		viewerDistance = 14.0;
+		viewerZenith = 1.20428;
 	}
 		break;
 	case 3: {
 		// Select Earth
-		std::cout<<"Earth"<<std::endl;
+		std::cout << "Earth" << std::endl;
+		planetNum = 3;
+		viewerDistance = 14.0;
+		viewerZenith = 1.20428;
 	}
 		break;
 	case 4: {
 		// Select Mars
-		std::cout<<"Mars"<<std::endl;
+		std::cout << "Mars" << std::endl;
+		planetNum = 4;
+		viewerDistance = 17.0;
+		viewerZenith = 1.41372;
 	}
 		break;
 	case 5: {
 		// Select Jupiter
-		std::cout<<"Jupiter"<<std::endl;
-
+		std::cout << "Jupiter" << std::endl;
+		planetNum = 5;
+		viewerDistance = 29.0;
+		viewerZenith = 1.41372;
 	}
 		break;
 	case 6: {
 		// Select Saturn
-		std::cout<<"Saturn"<<std::endl;
+		std::cout << "Saturn" << std::endl;
+		planetNum = 6;
+		viewerDistance = 33.0;
+		viewerZenith = 0.680679;
 	}
 		break;
 	case 7: {
 		// Select Uranus
-		std::cout<<"Uranus"<<std::endl;
+		std::cout << "Uranus" << std::endl;
+		planetNum = 7;
+		viewerDistance = 33.0;
+		viewerZenith = 0.680679;
 	}
 		break;
 	case 8: {
 		// Neptune
-		std::cout<<"Neptune"<<std::endl;
+		std::cout << "Neptune" << std::endl;
+		planetNum = 8;
 	}
 		break;
 	case 9: {
 		// Select Pluto
-		std::cout<<"Pluto"<<std::endl;
+		std::cout << "Pluto" << std::endl;
+		planetNum = 9;
 	}
+		break;
+	case 10: {
+		// Select Pluto
+		std::cout << "Pluto" << std::endl;
+		planetNum = 0;
+		followPlanet = false;
+	}
+		break;
 	}
 	glutPostRedisplay();
 }
-
 
 void SectionMenu(GLint transOption) {
 	switch (transOption) {
 	case 1: {
 		// Select Inner
-		std::cout<<"Inner"<<std::endl;
+		std::cout << "Inner" << std::endl;
 		solarSystem[1].p_size = sizeMercury;
 		solarSystem[2].p_size = sizeVenus;
 		solarSystem[3].p_size = sizeEarth;
@@ -567,7 +616,7 @@ void SectionMenu(GLint transOption) {
 		break;
 	case 2: {
 		// Select Outer
-		std::cout<<"Outer"<<std::endl;
+		std::cout << "Outer" << std::endl;
 		solarSystem[1].p_size = 0.0;
 		solarSystem[2].p_size = 0.0;
 		solarSystem[3].p_size = 0.0;
@@ -582,7 +631,7 @@ void SectionMenu(GLint transOption) {
 		break;
 	case 3: {
 		// Select Entire
-		std::cout<<"Entire"<<std::endl;
+		std::cout << "Entire" << std::endl;
 		solarSystem[1].p_size = sizeMercury;
 		solarSystem[2].p_size = sizeVenus;
 		solarSystem[3].p_size = sizeEarth;
@@ -598,7 +647,6 @@ void SectionMenu(GLint transOption) {
 	glutPostRedisplay();
 }
 
-
 void myMenu() {
 	GLint planet_Menu, section_Menu, main_Menu;
 
@@ -612,6 +660,7 @@ void myMenu() {
 	glutAddMenuEntry(" Uranus ", 7);
 	glutAddMenuEntry(" Neptune ", 8);
 	glutAddMenuEntry(" Pluto ", 9);
+	glutAddMenuEntry(" Unfollow ", 10);
 
 	section_Menu = glutCreateMenu(SectionMenu);
 	glutAddMenuEntry(" Inner ", 1);
@@ -624,7 +673,6 @@ void myMenu() {
 	glutAddMenuEntry(" Quit ", 2);
 
 }
-
 
 //<<<<<<<<<<<<<<<<<<<<<<<< main >>>>>>>>>>>>>>>>>>>>>>
 int main(int argc, char** argv) {
@@ -654,7 +702,7 @@ int main(int argc, char** argv) {
 
 	glutKeyboardFunc(myKeyboard);
 	// set view port
-	glViewport(0, 0, 1024, 768);
+	glViewport(0, 0, 2028, 1536);
 
 	glutIdleFunc(spinner);
 

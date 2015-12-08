@@ -13,10 +13,10 @@ const float PI = 3.1415926535;
 const float TO_RADIANS = PI/180.0;
 
 //Display Camera Constants
-const float maximumViewerDistance    = 60;
+const float maximumViewerDistance    = 2000;
 const float minimumViewerDistance    = 0;
-const float initialViewerDistance    = 30;
-const float viewerDistanceIncrement  = 1.0;
+const float initialViewerDistance    = 100;
+const float viewerDistanceIncrement  = 5.0;
 const float initialViewerAzimuth     = 0.0;
 const float initialViewerZenith      = PI / 2.0;
 const float viewerAngleIncrement     = PI / 60.0;
