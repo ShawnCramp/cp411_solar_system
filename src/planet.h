@@ -20,7 +20,7 @@ namespace planet {
 		Planet(float hod, float doy, float days, float hours, float distance,
 				float moons, float size, float animateInc, float yAngle, int textureID, int moonTex);
 		Planet();
-		Planet(int textureID, int moonTex, float size);
+		Planet(int textureID, float size);
 		void draw();
 		void drawSun();
 		position::Position getPosition();

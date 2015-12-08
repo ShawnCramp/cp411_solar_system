@@ -52,7 +52,7 @@ namespace planet {
 
 	}
 
-	Planet::Planet(int textureID, int moonTex, float size)
+	Planet::Planet(int textureID, float size)
 		: p_hod(0),
 		  p_doy(0),
 		  p_days(0),
@@ -63,7 +63,7 @@ namespace planet {
 		  p_animateInc(0),
 		  p_yAngle(0),
 		  p_textureID(textureID),
-		  p_moonTex(moonTex)
+		  p_moonTex(0)
 	{
 
 	}
@@ -122,10 +122,17 @@ namespace planet {
 				}
 			}
 		// If Saturn, Draw Ring
-		if (p_size == 2.5) {
-			glBindTexture(GL_TEXTURE_2D, 7);
+		if (p_size == 1.8*8.33) {
+			glBindTexture(GL_TEXTURE_2D, p_textureID);
 			glRotatef( -90.0, 1.0, 0.0, 0.0 );
-			gluDisk(quadro, 2.8, 4, 100, 100);
+			gluDisk(quadro, 20, 50, 100, 100);
+
+			std::cout<<"Saturn Check"<<std::endl;
+
+		} else if (p_size == 1.8*3.52) {
+			glBindTexture(GL_TEXTURE_2D, p_textureID);
+			glRotatef( -90.0, 1.0, 0.0, 0.0 );
+			gluDisk(quadro, 3.8, 4.5, 100, 100);
 		}
 		gluDeleteQuadric(quadro);
 	}
