@@ -21,7 +21,7 @@ const float initialViewerAzimuth     = 0.0;
 const float initialViewerZenith      = PI / 2.0;
 const float viewerAngleIncrement     = PI / 60.0;
 const float lookAtPosition[] = { 0.0, 0.0, 0.0 };
-
+const float camera[] = { 0.0, 0.0, 0.0 };
 
 
 #endif /* SRC_GLOBALS_H_ */

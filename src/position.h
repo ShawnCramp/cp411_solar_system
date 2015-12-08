@@ -10,7 +10,7 @@
 
 namespace position {
 	struct Position {
-		float x, y;
+		float x, y, angle;
 	};
 
 	struct DayHours {

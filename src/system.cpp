@@ -27,7 +27,7 @@ static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
 // These three variables control the animation's state and speed.
 float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
-static float AnimateInc = 500.0;  // Time step for animation (hours)
+static float AnimateInc = 6.0;  // Time step for animation (hours)
 
 float viewerDistance = initialViewerDistance;
 float viewerAzimuth = initialViewerAzimuth;
@@ -176,14 +176,12 @@ void myKeyboard(unsigned char key, int x, int y) {
 		viewerDistance -= viewerDistanceIncrement;
 		if (viewerDistance < minimumViewerDistance)
 			viewerDistance = minimumViewerDistance;
-		std::cout<<viewerDistance<<std::endl;
 		break;
 	}
 	case 'x': {
 		viewerDistance += viewerDistanceIncrement;
 		if (viewerDistance > maximumViewerDistance)
 			viewerDistance = maximumViewerDistance;
-		std::cout<<viewerDistance<<std::endl;
 		break;
 	}
 	case 'm': {
@@ -215,14 +213,12 @@ static void mySpecialKeyFunc(int pressedKey, int x, int y) {
 		viewerZenith -= viewerAngleIncrement;
 		if (viewerZenith < viewerAngleIncrement)
 			viewerZenith = viewerAngleIncrement;
-		std::cout<<viewerZenith<<std::endl;
 		break;
 	}
 	case GLUT_KEY_DOWN: {
 		viewerZenith += viewerAngleIncrement;
 		if (viewerZenith > PI - viewerAngleIncrement)
 			viewerZenith = PI - viewerAngleIncrement;
-		std::cout<<viewerZenith<<std::endl;
 		break;
 	}
 	}
@@ -332,14 +328,13 @@ void myDisplay(void) {
 	if (followPlanet) {
 		position::Position p = solarSystem[planetNum].getPosition();
 		gluLookAt(
-				lookAtPosition[0]
-						+ viewerDistance * sin(viewerZenith)
-								* sin(viewerAzimuth),
-				lookAtPosition[1] + viewerDistance * cos(viewerZenith),
-				lookAtPosition[2]
-						+ viewerDistance * sin(viewerZenith)
-								* cos(viewerAzimuth), lookAtPosition[0] + p.x,
-				lookAtPosition[1] + p.y, lookAtPosition[2], 0.0, 1.0, 0.020);
+				camera[0]+((solarSystem[planetNum].p_distance+viewerDistance)*cos(p.angle)),
+				camera[1],
+				camera[2]-((solarSystem[planetNum].p_distance+viewerDistance)*sin(p.angle)),
+				lookAtPosition[0],
+				lookAtPosition[1],
+				lookAtPosition[2],
+				0.0, 1.0, 0);
 	} else {
 		gluLookAt(
 				lookAtPosition[0]
@@ -354,7 +349,7 @@ void myDisplay(void) {
 
 	// Rotate the plane of the elliptic
 	// (rotate the model's plane about the x axis by fifteen degrees)
-	glRotatef(20.0, 1.0, 0.0, 0.0);
+		glRotatef(0.0, 1.0, 0.0, 0.0);
 
 	for (size_t t = 0; t < solarSystem.size(); ++t) {
 		glEnable(GL_TEXTURE_2D);
@@ -525,78 +520,69 @@ void PlanetMenu(GLint transOption) {
 	case 1: {
 		// Select Mercury
 		std::cout << "Mercury" << std::endl;
-		viewerDistance = 70.0;
-		viewerZenith = 0.523599;
 		planetNum = 1;
+		viewerDistance = 10.0;
 	}
 		break;
 	case 2: {
 		// Select Venus
 		std::cout << "Venus" << std::endl;
 		planetNum = 2;
-		viewerDistance = 84.0;
-		viewerZenith = 0.994841;
+		viewerDistance = 10.0;
 	}
 		break;
 	case 3: {
 		// Select Earth
 		std::cout << "Earth" << std::endl;
 		planetNum = 3;
-		viewerDistance = 84.0;
-		viewerZenith = .942481;
+		viewerDistance = 10.0;
 	}
 		break;
 	case 4: {
 		// Select Mars
 		std::cout << "Mars" << std::endl;
 		planetNum = 4;
-		viewerDistance = 92;
-		viewerZenith = 1.20428;
+		viewerDistance = 10.0;
 	}
 		break;
 	case 5: {
 		// Select Jupiter
 		std::cout << "Jupiter" << std::endl;
 		planetNum = 5;
-		viewerDistance = 424;
-		viewerZenith = 1.36136;
+		viewerDistance = 60.0;
 	}
 		break;
 	case 6: {
 		// Select Saturn
 		std::cout << "Saturn" << std::endl;
 		planetNum = 6;
-		viewerDistance = 713.0;
-		viewerZenith = 1.41372;
+		viewerDistance = 60.0;
 	}
 		break;
 	case 7: {
 		// Select Uranus
 		std::cout << "Uranus" << std::endl;
 		planetNum = 7;
-		viewerDistance = 758.0;
-		viewerZenith = 0.837759;
+		viewerDistance = 60.0;
 	}
 		break;
 	case 8: {
 		// Neptune
 		std::cout << "Neptune" << std::endl;
-		viewerDistance = 1100.0;
-		viewerZenith = 0.733042;
 		planetNum = 8;
+		viewerDistance = 60.0;
 	}
 		break;
 	case 9: {
 		// Select Pluto
 		std::cout << "Pluto" << std::endl;
-		viewerDistance = 1935;//1560;
-		viewerZenith = 1.36136;
 		planetNum = 9;
+		viewerDistance = 10.0;
 	}
 		break;
 	case 10: {
-		// Select Pluto
-		std::cout << "Pluto" << std::endl;
+		// Reset
+		std::cout << "Reset" << std::endl;
 		planetNum = 0;
 		viewerDistance = 100;
 		viewerZenith = PI / 2.0;
