@@ -57,7 +57,7 @@ static float doyEarth = 0.0;
 static float daysEarth = 365.0;
 static float hoursEarth = 24.0;
 static float distanceEarth = 7.0;
-static float moonsEarth = 1.0;
+static float moonsEarth = 2.0;
 static float sizeEarth = 0.6;
 
 // Mars

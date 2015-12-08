@@ -100,13 +100,24 @@ namespace planet {
 			glBindTexture(GL_TEXTURE_2D, p_textureID);
 			gluSphere(quadro, p_size, 48, 48);
 		glPopMatrix();
-		if (p_moons>0){
+
+		if (p_moons>0) {
+			float months = 12.0;
 			glTranslatef(p_distance, 0.0, 0.0 );
-		glRotatef( 360.0*12.0*dh.p_doy/p_days, 0.0, 1.0, 0.0 );
-		   glTranslatef(p_size+ 1.7, 0.0, 0.0 );
-		    glColor3f( 0.3, 0.7, 0.3 );
-		    glutWireSphere( 0.1, 5, 5 );
-		}
+				for (int i=0; i<p_moons; i++) {
+					glPushMatrix();
+					if (i==0) {
+						glRotatef( 360.0*months*dh.p_doy/p_days, 0.0, 1.0, 0.0 ); //higher months == faster rotation
+						glTranslatef(p_size+ 0.25, 0.0, 0.0 );
+					} else {
+						glRotatef( 360.0*(months-(2.5*i))*dh.p_doy/p_days, 0.0, 1.0, 0.0 );
+						glTranslatef(p_size+ 0.8, 0.0, 0.0 );
+					}
+					glColor3f( 0.3, 0.7, 0.3 );
+					glutWireSphere( 0.1, 5, 5 );
+					glPopMatrix();
+				}
+			}
 		gluDeleteQuadric(quadro);
 	}
 
