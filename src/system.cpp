@@ -27,7 +27,7 @@ static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
 // These three variables control the animation's state and speed.
 float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
-static float AnimateInc = 0.2;  // Time step for animation (hours)
+static float AnimateInc = 2.0;  // Time step for animation (hours)
 
 float viewerDistance = initialViewerDistance;
 float viewerAzimuth = initialViewerAzimuth;

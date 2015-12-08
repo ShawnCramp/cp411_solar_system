@@ -113,7 +113,7 @@ namespace planet {
 						glRotatef( 360.0*months*dh.p_doy/p_days, 0.0, 1.0, 0.0 ); //higher months == faster rotation
 						glTranslatef(p_size+ 0.25, 0.0, 0.0 );
 					} else {
-						glRotatef( 360.0*(months-(2.5*i))*dh.p_doy/p_days, 0.0, 1.0, 0.0 );
+						glRotatef( 360.0*(months-(2.5*i))*(dh.p_doy/p_days), 0.0, 1.0, 0.0 );
 						glTranslatef(p_size+ 0.8, 0.0, 0.0 );
 					}
 					glBindTexture(GL_TEXTURE_2D, p_moonTex);
