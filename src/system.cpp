@@ -27,7 +27,7 @@ static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
 // These three variables control the animation's state and speed.
 float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
-static float AnimateInc = 6.0;  // Time step for animation (hours)
+static float AnimateInc = 2.0;  // Time step for animation (hours)
 
 float viewerDistance = initialViewerDistance;
 float viewerAzimuth = initialViewerAzimuth;
@@ -162,6 +162,16 @@ void myKeyboard(unsigned char key, int x, int y) {
 	// handle keyboard press
 	switch (key) {
 
+	case 'q':
+		std::cout << AnimateInc << std::endl;
+		AnimateInc = AnimateInc * 2.0;
+		break;
+
+	case 'a':
+		std::cout << AnimateInc << std::endl;
+		AnimateInc = AnimateInc /  2.0;
+		break;
+
 	case 'R':
 	case 'r':{
 		for(size_t i =0;i<solarSystem.size();i++){
@@ -180,6 +190,7 @@ void myKeyboard(unsigned char key, int x, int y) {
 	}
 		break;
 	}
+
 	case 'S':
 		Key_s();
 		break;
@@ -251,15 +262,6 @@ static void Key_s(void) {
 	spinMode = GL_TRUE;
 }
 
-static void Key_up(void) {
-	AnimateInc *= 2.0;			// Double the animation time step
-}
-
-static void Key_down(void) {
-	AnimateInc /= 2.0;			// Halve the animation time step
-
-}
-
 void drawSkybox(void) {
 		// Front side
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
@@ -269,60 +271,55 @@ void drawSkybox(void) {
 		glPushMatrix();
 		glBegin(GL_QUADS);
 
-		glTexCoord2f(0.0, 0.0); glVertex3f( -30.0, -30.0, -30.0);       // P1
-		glTexCoord2f(0.0, 1.0); glVertex3f( -30.0,  30.0, -30.0);       // P2
-		glTexCoord2f(1.0, 1.0); glVertex3f(  30.0,  30.0, -30.0);       // P3
-		glTexCoord2f(1.0, 0.0);	glVertex3f(  30.0, -30.0, -30.0);       // P4
+		glTexCoord2f(0.0, 0.0); glVertex3f( -2000.0, -2000.0, -2000.0);       // P1
+		glTexCoord2f(0.0, 5.0); glVertex3f( -2000.0,  2000.0, -2000.0);       // P2
+		glTexCoord2f(5.0, 5.0); glVertex3f(  2000.0,  2000.0, -2000.0);       // P3
+		glTexCoord2f(5.0, 0.0);	glVertex3f(  2000.0, -2000.0, -2000.0);       // P4
 
 		glEnd();
 		glPopMatrix();
 
-		/*
+
 		// White side - BACK
-		glBegin(GL_POLYGON);
-		glColor3f(   1.0,  1.0, 1.0 );
-		glVertex3f(  60.5, -60.5, 60.5 );
-		glVertex3f(  60.5,  60.5, 60.5 );
-		glVertex3f( -60.5,  60.5, 60.5 );
-		glVertex3f( -60.5, -60.5, 60.5 );
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0, 0.0); glVertex3f(  2000.0, -2000.0, 2000.0 );
+		glTexCoord2f(0.0, 5.0); glVertex3f(  2000.0,  2000.0, 2000.0 );
+		glTexCoord2f(5.0, 5.0); glVertex3f( -2000.0,  2000.0, 2000.0 );
+		glTexCoord2f(5.0, 0.0); glVertex3f( -2000.0, -2000.0, 2000.0 );
 		glEnd();
+
 
 		// Purple side - RIGHT
 		glBegin(GL_POLYGON);
-		glColor3f(   1.0,  1.0, 1.0 );
-		glVertex3f( 60.5, -60.5, -60.5 );
-		glVertex3f( 60.5,  60.5, -60.5 );
-		glVertex3f( 60.5,  60.5,  60.5 );
-		glVertex3f( 60.5, -60.5,  60.5 );
+		glTexCoord2f(0.0, 0.0); glVertex3f( 2000.0, -2000.0, -2000.0 );
+		glTexCoord2f(0.0, 5.0); glVertex3f( 2000.0,  2000.0, -2000.0 );
+		glTexCoord2f(5.0, 5.0); glVertex3f( 2000.0,  2000.0,  2000.0 );
+		glTexCoord2f(5.0, 0.0); glVertex3f( 2000.0, -2000.0,  2000.0 );
 		glEnd();
 
 		// Green side - LEFT
 		glBegin(GL_POLYGON);
-		glColor3f(   1.0,  1.0, 1.0 );
-		glVertex3f( -60.5, -60.5,  60.5 );
-		glVertex3f( -60.5,  60.5,  60.5 );
-		glVertex3f( -60.5,  60.5, -60.5 );
-		glVertex3f( -60.5, -60.5, -60.5 );
+		glTexCoord2f(0.0, 0.0); glVertex3f( -2000.0, -2000.0,  2000.0 );
+		glTexCoord2f(0.0, 5.0); glVertex3f( -2000.0,  2000.0,  2000.0 );
+		glTexCoord2f(5.0, 5.0); glVertex3f( -2000.0,  2000.0, -2000.0 );
+		glTexCoord2f(5.0, 0.0); glVertex3f( -2000.0, -2000.0, -2000.0 );
 		glEnd();
 
 		// Blue side - TOP
 		glBegin(GL_POLYGON);
-		glColor3f(   1.0,  1.0, 1.0 );
-		glVertex3f(  60.5,  60.5,  60.5 );
-		glVertex3f(  60.5,  60.5, -60.5 );
-		glVertex3f( -60.5,  60.5, -60.5 );
-		glVertex3f( -60.5,  60.5,  60.5 );
+		glTexCoord2f(0.0, 0.0); glVertex3f(  2000.0,  2000.0,  2000.0 );
+		glTexCoord2f(0.0, 5.0); glVertex3f(  2000.0,  2000.0, -2000.0 );
+		glTexCoord2f(5.0, 5.0); glVertex3f( -2000.0,  2000.0, -2000.0 );
+		glTexCoord2f(5.0, 0.0); glVertex3f( -2000.0,  2000.0,  2000.0 );
 		glEnd();
 
 		// Red side - BOTTOM
 		glBegin(GL_POLYGON);
-		glColor3f(   1.0,  1.0, 1.0 );
-		glVertex3f(  60.5, -60.5, -60.5 );
-		glVertex3f(  60.5, -60.5,  60.5 );
-		glVertex3f( -60.5, -60.5,  60.5 );
-		glVertex3f( -60.5, -60.5, -60.5 );
+		glTexCoord2f(0.0, 0.0); glVertex3f(  2000.0, -2000.0, -2000.0 );
+		glTexCoord2f(0.0, 5.0); glVertex3f(  2000.0, -2000.0,  2000.0 );
+		glTexCoord2f(5.0, 5.0); glVertex3f( -2000.0, -2000.0,  2000.0 );
+		glTexCoord2f(5.0, 0.0); glVertex3f( -2000.0, -2000.0, -2000.0 );
 		glEnd();
-		*/
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<< myDisplay >>>>>>>>>>>>>>>>>
@@ -376,10 +373,10 @@ void myDisplay(void) {
 		glDisable(GL_TEXTURE_2D);
 	}
 
-//	// Draw Skybox
-//	glEnable(GL_TEXTURE_2D);
-//	drawSkybox();
-//	glDisable(GL_TEXTURE_2D);
+	// Draw Skybox
+	glEnable(GL_TEXTURE_2D);
+	drawSkybox();
+	glDisable(GL_TEXTURE_2D);
 
 	// Flush the pipeline, and swap the buffers
 	glDisable(GL_LIGHTING);
@@ -517,11 +514,13 @@ void spinner(void) { // alter angles by small amount
 void mainMenu(GLint menuOption) {
 	switch (menuOption) {
 	case 1: {
-		// temp
-		std::cout << "Planet Menu" << std::endl;
+		// Reset Camera
+
+
 	}
 		break;
 	case 2:
+		// Exit Program
 		exit(0);
 	}
 	glutPostRedisplay();
@@ -679,6 +678,7 @@ void myMenu() {
 	glutCreateMenu(mainMenu); // Main pop-up menu
 	glutAddSubMenu(" Planets ", planet_Menu);
 	glutAddSubMenu(" Sections ", section_Menu);
+	glutAddMenuEntry(" Reset Camera ", 1);
 	glutAddMenuEntry(" Quit ", 2);
 
 }
