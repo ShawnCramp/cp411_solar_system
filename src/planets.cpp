@@ -105,7 +105,7 @@ namespace planet {
 			gluSphere(quadro, p_size, 48, 48);
 		glPopMatrix();
 
-		if (p_moons>0) {
+		if (p_moons>0 && p_size != 0) {
 			float months = 12.0;
 			glTranslatef(p_distance, 0.0, 0.0 );
 				for (int i=0; i<p_moons; i++) {
@@ -124,11 +124,11 @@ namespace planet {
 			}
 
 		// If Saturn, Draw Ring
-		if (p_moons == 8.0) {
+		if (p_moons == 8.0 && p_size != 0) {
 			glBindTexture(GL_TEXTURE_2D, p_textureID);
 			glRotatef( 45.0, 1.0, 0.0, 0.0 );
 			gluDisk(quadro, 17.5, 30.5, 100, 100);
-		} else if (p_moons == 5.0) {
+		} else if (p_moons == 5.0 && p_size != 0) {
 			glBindTexture(GL_TEXTURE_2D, p_textureID);
 			glRotatef( 0.0, 1.0, 0.0, 0.0 );
 			gluDisk(quadro, 20, 30, 100, 100);
