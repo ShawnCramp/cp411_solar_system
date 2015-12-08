@@ -244,17 +244,18 @@ static void Key_down(void) {
 
 void drawSkybox(void) {
 		// Front side
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+		glBindTexture(GL_TEXTURE_2D, 11);
+
 		glPushMatrix();
-		glBegin(GL_POLYGON);
-		glBindTexture(GL_TEXTURE_2D, 4);
-		glTexCoord2f(30.0, 30.0);
-		glVertex3f( -30.5, -30.5, -30.5);       // P1
-		glTexCoord2f(30.0, 0.0);
-		glVertex3f( -30.5,  30.5, -30.5);       // P2
-		glTexCoord2f(0.0, 0.0);
-		glVertex3f(  30.5,  30.5, -30.5);       // P3
-		glTexCoord2f(0.0, 30.0);
-		glVertex3f(  30.5, -30.5, -30.5);       // P4
+		glBegin(GL_QUADS);
+
+		glTexCoord2f(0.0, 0.0); glVertex3f( -30.0, -30.0, -30.0);       // P1
+		glTexCoord2f(0.0, 1.0); glVertex3f( -30.0,  30.0, -30.0);       // P2
+		glTexCoord2f(1.0, 1.0); glVertex3f(  30.0,  30.0, -30.0);       // P3
+		glTexCoord2f(1.0, 0.0);	glVertex3f(  30.0, -30.0, -30.0);       // P4
+
 		glEnd();
 		glPopMatrix();
 
