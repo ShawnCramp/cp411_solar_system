@@ -626,9 +626,11 @@ void SectionMenu(GLint transOption) {
 		break;
 	case 2: {
 		// Select Outer
-		for(size_t i =5;i<solarSystem.size();i++){
-			solarSystem[i].p_distance /=2.0;
-			std::cout << solarSystem[i].p_distance << std::endl;
+		if (solarSystem[5].p_distance>78 ){
+			for(size_t i =5;i<solarSystem.size();i++){
+				solarSystem[i].p_distance /=2.0;
+				std::cout << solarSystem[i].p_distance << std::endl;
+			}
 		}
 		std::cout << "Outer" << std::endl;
 		solarSystem[1].p_size = 0.0;
