@@ -73,6 +73,7 @@ namespace planet {
 		dh = calcDayHours();
 		position.x = p_distance*cos((360*dh.p_doy/p_days)*(PI/180));
 		position.y = p_distance*sin((360*dh.p_doy/p_days)*(PI/180));
+		position.angle = (360*dh.p_doy/p_days)*(PI/180);
 		return position;
 	}
 
@@ -124,7 +125,6 @@ namespace planet {
 
 		// If Saturn, Draw Ring
 		if (p_moons == 8.0) {
-			//std::cout<<"hi";
 			glBindTexture(GL_TEXTURE_2D, p_textureID);
 			glRotatef( 45.0, 1.0, 0.0, 0.0 );
 			gluDisk(quadro, 17.5, 30.5, 100, 100);
