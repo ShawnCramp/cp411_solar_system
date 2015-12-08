@@ -27,7 +27,7 @@ static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
 // These three variables control the animation's state and speed.
 float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
-static float AnimateInc = 12.0;  // Time step for animation (hours)
+static float AnimateInc = 500.0;  // Time step for animation (hours)
 
 float viewerDistance = initialViewerDistance;
 float viewerAzimuth = initialViewerAzimuth;
@@ -112,7 +112,7 @@ static float daysPluto = 14181.75;
 static float hoursPluto = 153.29;
 static float distancePluto = distanceEarth * 39.5;
 static float moonsPluto = 1.0;
-static float sizePluto = sizeEarth*0.18;
+static float sizePluto = sizeEarth*0.28;
 
 /* Global containers */
 RGBpixmap pix[12]; // make ten (empty) pixmaps
@@ -176,12 +176,14 @@ void myKeyboard(unsigned char key, int x, int y) {
 		viewerDistance -= viewerDistanceIncrement;
 		if (viewerDistance < minimumViewerDistance)
 			viewerDistance = minimumViewerDistance;
+		std::cout<<viewerDistance<<std::endl;
 		break;
 	}
 	case 'x': {
 		viewerDistance += viewerDistanceIncrement;
 		if (viewerDistance > maximumViewerDistance)
 			viewerDistance = maximumViewerDistance;
+		std::cout<<viewerDistance<<std::endl;
 		break;
 	}
 	case 'm': {
@@ -213,12 +215,14 @@ static void mySpecialKeyFunc(int pressedKey, int x, int y) {
 		viewerZenith -= viewerAngleIncrement;
 		if (viewerZenith < viewerAngleIncrement)
 			viewerZenith = viewerAngleIncrement;
+		std::cout<<viewerZenith<<std::endl;
 		break;
 	}
 	case GLUT_KEY_DOWN: {
 		viewerZenith += viewerAngleIncrement;
 		if (viewerZenith > PI - viewerAngleIncrement)
 			viewerZenith = PI - viewerAngleIncrement;
+		std::cout<<viewerZenith<<std::endl;
 		break;
 	}
 	}
@@ -318,7 +322,7 @@ void myDisplay(void) {
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(60.0, WIDTH / HEIGHT, 0.2, 2000.0);
+	gluPerspective(60.0, WIDTH / HEIGHT, 0.2, 4000.0);
 	// Clear the rendering window
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
@@ -521,8 +525,8 @@ void PlanetMenu(GLint transOption) {
 	case 1: {
 		// Select Mercury
 		std::cout << "Mercury" << std::endl;
-		viewerDistance = 15.0;
-		viewerZenith = 0.994838;
+		viewerDistance = 70.0;
+		viewerZenith = 0.523599;
 		planetNum = 1;
 	}
 		break;
@@ -530,59 +534,63 @@ void PlanetMenu(GLint transOption) {
 		// Select Venus
 		std::cout << "Venus" << std::endl;
 		planetNum = 2;
-		viewerDistance = 14.0;
-		viewerZenith = 1.20428;
+		viewerDistance = 84.0;
+		viewerZenith = 0.994841;
 	}
 		break;
 	case 3: {
 		// Select Earth
 		std::cout << "Earth" << std::endl;
 		planetNum = 3;
-		viewerDistance = 14.0;
-		viewerZenith = 1.20428;
+		viewerDistance = 84.0;
+		viewerZenith = .942481;
 	}
 		break;
 	case 4: {
 		// Select Mars
 		std::cout << "Mars" << std::endl;
 		planetNum = 4;
-		viewerDistance = 17.0;
-		viewerZenith = 1.41372;
+		viewerDistance = 92;
+		viewerZenith = 1.20428;
 	}
 		break;
 	case 5: {
 		// Select Jupiter
 		std::cout << "Jupiter" << std::endl;
 		planetNum = 5;
-		viewerDistance = 29.0;
-		viewerZenith = 1.41372;
+		viewerDistance = 424;
+		viewerZenith = 1.36136;
 	}
 		break;
 	case 6: {
 		// Select Saturn
 		std::cout << "Saturn" << std::endl;
 		planetNum = 6;
-		viewerDistance = 33.0;
-		viewerZenith = 0.680679;
+		viewerDistance = 713.0;
+		viewerZenith = 1.41372;
 	}
 		break;
 	case 7: {
 		// Select Uranus
 		std::cout << "Uranus" << std::endl;
 		planetNum = 7;
-		viewerDistance = 33.0;
-		viewerZenith = 0.680679;
+		viewerDistance = 758.0;
+		viewerZenith = 0.837759;
 	}
 		break;
 	case 8: {
 		// Neptune
 		std::cout << "Neptune" << std::endl;
+		viewerDistance = 1100.0;
+		viewerZenith = 0.733042;
 		planetNum = 8;
 	}
 		break;
 	case 9: {
 		// Select Pluto
 		std::cout << "Pluto" << std::endl;
+		viewerDistance = 1935;//1560;
+		viewerZenith = 1.36136;
 		planetNum = 9;
 	}
 		break;
@@ -590,6 +598,8 @@ void PlanetMenu(GLint transOption) {
 		// Select Pluto
 		std::cout << "Pluto" << std::endl;
 		planetNum = 0;
+		viewerDistance = 100;
+		viewerZenith = PI / 2.0;
 		followPlanet = false;
 	}
 		break;

@@ -124,7 +124,7 @@ namespace planet {
 
 		// If Saturn, Draw Ring
 		if (p_moons == 8.0) {
-			std::cout<<"hi";
+			//std::cout<<"hi";
 			glBindTexture(GL_TEXTURE_2D, p_textureID);
 			glRotatef( 45.0, 1.0, 0.0, 0.0 );
 			gluDisk(quadro, 17.5, 30.5, 100, 100);
