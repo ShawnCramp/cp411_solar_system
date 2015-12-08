@@ -121,18 +121,17 @@ namespace planet {
 					glPopMatrix();
 				}
 			}
+
 		// If Saturn, Draw Ring
-		if (p_size == 1.8*8.33) {
+		if (p_moons == 8.0) {
+			std::cout<<"hi";
 			glBindTexture(GL_TEXTURE_2D, p_textureID);
-			glRotatef( -90.0, 1.0, 0.0, 0.0 );
-			gluDisk(quadro, 20, 50, 100, 100);
-
-			std::cout<<"Saturn Check"<<std::endl;
-
-		} else if (p_size == 1.8*3.52) {
+			glRotatef( 45.0, 1.0, 0.0, 0.0 );
+			gluDisk(quadro, 17.5, 30.5, 100, 100);
+		} else if (p_moons == 5.0) {
 			glBindTexture(GL_TEXTURE_2D, p_textureID);
-			glRotatef( -90.0, 1.0, 0.0, 0.0 );
-			gluDisk(quadro, 3.8, 4.5, 100, 100);
+			glRotatef( 0.0, 1.0, 0.0, 0.0 );
+			gluDisk(quadro, 20, 30, 100, 100);
 		}
 		gluDeleteQuadric(quadro);
 	}
