@@ -609,6 +609,7 @@ void SectionMenu(GLint transOption) {
 	switch (transOption) {
 	case 1: {
 		// Select Inner
+
 		std::cout << "Inner" << std::endl;
 		solarSystem[1].p_size = sizeMercury;
 		solarSystem[2].p_size = sizeVenus;
@@ -624,6 +625,10 @@ void SectionMenu(GLint transOption) {
 		break;
 	case 2: {
 		// Select Outer
+		for(size_t i =5;i<solarSystem.size();i++){
+			solarSystem[i].p_distance /=2.0;
+			std::cout << solarSystem[i].p_distance << std::endl;
+		}
 		std::cout << "Outer" << std::endl;
 		solarSystem[1].p_size = 0.0;
 		solarSystem[2].p_size = 0.0;
@@ -639,6 +644,12 @@ void SectionMenu(GLint transOption) {
 		break;
 	case 3: {
 		// Select Entire
+		if (solarSystem[5].p_distance < 156){
+			for(size_t i =5;i<solarSystem.size();i++){
+					solarSystem[i].p_distance *=2.0;
+					std::cout << solarSystem[i].p_distance << std::endl;
+				}
+		}
 		std::cout << "Entire" << std::endl;
 		solarSystem[1].p_size = sizeMercury;
 		solarSystem[2].p_size = sizeVenus;
