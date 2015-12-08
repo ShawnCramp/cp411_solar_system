@@ -123,6 +123,8 @@ namespace planet {
 			}
 		// If Saturn, Draw Ring
 		if (p_size == 2.5) {
+			glBindTexture(GL_TEXTURE_2D, 7);
+			glRotatef( -90.0, 1.0, 0.0, 0.0 );
 			gluDisk(quadro, 2.8, 4, 100, 100);
 		}
 		gluDeleteQuadric(quadro);
