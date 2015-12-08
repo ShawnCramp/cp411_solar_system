@@ -163,10 +163,23 @@ void myKeyboard(unsigned char key, int x, int y) {
 	switch (key) {
 
 	case 'R':
-	case 'r':
-		Key_r();
+	case 'r':{
+		for(size_t i =0;i<solarSystem.size();i++){
+			solarSystem[i].p_animateInc *=2.0;
+			std::cout << solarSystem[i].p_animateInc << std::endl;
+		}
+
 		break;
-	case 's':
+	}
+
+
+	case 's':{
+		for(size_t i =0;i<solarSystem.size();i++){
+			solarSystem[i].p_animateInc /=2.0;
+			std::cout << solarSystem[i].p_animateInc << std::endl;
+	}
+		break;
+	}
 	case 'S':
 		Key_s();
 		break;
