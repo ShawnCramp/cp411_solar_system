@@ -13,7 +13,7 @@
 #include <iostream>
 #include "planet.h"
 #include "position.h"
-#include "globals.h"
+#include "../globals.h"
 
 namespace planet {
 
@@ -112,13 +112,14 @@ namespace planet {
 					glPushMatrix();
 					if (i==0) {
 						glRotatef( 360.0*months*dh.p_doy/p_days, 0.0, 1.0, 0.0 ); //higher months == faster rotation
-						glTranslatef(p_size+ 0.25, 0.0, 0.0 );
+						glTranslatef(p_size+0.25, 0.0, 0.0 );
 					} else {
-						glRotatef( 360.0*(months-(2.5*i))*(dh.p_doy/p_days), 0.0, 1.0, 0.0 );
+						dh.p_doy += i*6;
+						glRotatef( 360.0*(months-(2.5*i))*(dh.p_doy/p_days), 0.0, 1.0,0.0 );
 						glTranslatef(p_size+ 0.8, 0.0, 0.0 );
 					}
 					glBindTexture(GL_TEXTURE_2D, p_moonTex);
-					gluSphere( quadro, 0.1, 48, 48);
+					gluSphere( quadro, 0.2, 48, 48);
 					glPopMatrix();
 				}
 			}
