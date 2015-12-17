@@ -18,7 +18,4 @@ namespace position {
 	};
 }
 
-
-
-
 #endif /* SRC_POSITION_H_ */

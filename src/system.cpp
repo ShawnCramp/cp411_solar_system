@@ -1,118 +1,43 @@
+/**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
+ * Author:	Shawn Cramp
+ * ID:		111007290
+ * Author: 	Edward Huang
+ * ID:		100949380
+ * Author: 	Don Miguel
+ * ID:		120760850
+ * Author: 	Nick Hare
+ * ID:		120585990
+ *
+ * Description:	CP411 Final Assignment
+ * 		Solar System
+ *
+ * Date:	December 17th, 2015
+ *<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>
+ */
+
 #include <windows.h>
 #include <stdio.h>
 #include <gl/Gl.h>
 #include <gl/freeglut.h>
 #include <gl/glut.h>
-#include "solar.h"
 #include <math.h>
 #include <string>
 #include <vector>
 #include "RGBpixmap.h"
-#include "planet.h"
 #include "globals.h"
-#include "position.h"
+#include "planets/solar.h"
+#include "planets/planet.h"
 
 #define WIDTH 1024
 #define HEIGHT 768
 
-GLint moving = 0, xBegin = 0, coordinate = 1, type = 4, selected = 0, showing =
-		0, solar = 0, shading = 1, backface = 1, openbf = 0, D3 = 0,
-		lightOn = 0, style = 1, glslOption = 0;
-
-GLfloat xeye = 3.0, yeye = 3.0, zeye = 7.0;  //  Viewing-coordinate origin.
-GLfloat xref = 0.0, yref = 0.0, zref = 0.0;  //  Look-at point.
-GLfloat Vx = 0.0, Vy = 1.0, Vz = 0.0;        //  View up vector.
-
-static GLenum spinMode = GL_TRUE;
-static GLenum singleStep = GL_FALSE;
-// These three variables control the animation's state and speed.
-float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
 static float AnimateInc = 2.0;  // Time step for animation (hours)
 
 float viewerDistance = initialViewerDistance;
 float viewerAzimuth = initialViewerAzimuth;
 float viewerZenith = initialViewerZenith;
 
-// Earth
-static float hodEarth = 0.0;
-static float doyEarth = 0.0;
-static float daysEarth = 365.0;
-static float hoursEarth = 24.0;
-static float distanceEarth = 30.0;
-static float moonsEarth = 1.0;
-static float sizeEarth = 1.8;
-
-// Mercury
-static float doyMercury = 0.0;
-static float hodMercury = 0.0;
-static float daysMercury = 1.5005;
-static float hoursMercury = 1407.5;
-static float distanceMercury = 0.387 * distanceEarth;
-static float moonsMercury = 0.0;
-static float sizeMercury = sizeEarth*0.38;
-
-// Venus
-static float doyVenus = 0.0;
-static float hodVenus = 0.0;
-static float daysVenus = 0.9259;
-static float hoursVenus = 5832.0;
-static float distanceVenus = distanceEarth * 0.722;
-static float moonsVenus = 0.0;
-static float sizeVenus = sizeEarth*0.95;
-
-// Mars
-static float doyMars = 0.0;
-static float hodMars = 0.0;
-static float daysMars = 672.98;
-static float hoursMars = 24.5;
-static float distanceMars = distanceEarth * 1.52;
-static float moonsMars = 2.0;
-static float sizeMars = sizeEarth*0.53;
-
-// Jupiter
-static float doyJupiter = 0.0;
-static float hodJupiter = 0.0;
-static float daysJupiter = 10469.46;
-static float hoursJupiter = 9.925;
-static float distanceJupiter = distanceEarth * 5.2;
-static float moonsJupiter = 4.0;
-static float sizeJupiter = sizeEarth*10;
-
-// Saturn
-static float doySaturn = 0.0;
-static float hodSaturn = 0.0;
-static float daysSaturn = 24475.95;
-static float hoursSaturn = 10.55;
-static float distanceSaturn = distanceEarth * 9.58;
-static float moonsSaturn = 8.0;
-static float sizeSaturn = sizeEarth*8.33;
-
-// Uranus
-static float doyUranus = 0.0;
-static float hodUranus = 0.0;
-static float daysUranus = 43324.94;
-static float hoursUranus = 17.2;
-static float distanceUranus = distanceEarth * 19.2;
-static float moonsUranus = 5.0;
-static float sizeUranus = sizeEarth*3.63;
-
-// Neptune
-static float doyNeptune = 0.0;
-static float hodNeptune = 0.0;
-static float daysNeptune = 89649.93;
-static float hoursNeptune = 16.11;
-static float distanceNeptune = distanceEarth*30.1;
-static float moonsNeptune = 2.0;
-static float sizeNeptune = sizeEarth*3.52;
-
-// Pluto
-static float doyPluto = 0.0;
-static float hodPluto = 0.0;
-static float daysPluto = 14181.75;
-static float hoursPluto = 153.29;
-static float distancePluto = distanceEarth * 39.5;
-static float moonsPluto = 1.0;
-static float sizePluto = sizeEarth*0.28;
+#include "planets/data.h"
 
 /* Global containers */
 RGBpixmap pix[12]; // make ten (empty) pixmaps
@@ -130,197 +55,11 @@ std::vector<planet::Planet> solarSystem;
 
 bool followPlanet = false;
 int planetNum = 0;
-/**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
- * Author:	Shawn Cramp
- * ID:		111007290
- * Author: 	Edward Huang
- * ID:		100949380
- * Author: 	Don Miguel
- * ID:		120760850
- * Author: 	Nick Hare
- * ID:		120585990
- *
- * Description:	CP411 Final Assignment
- * 		Solar System
- *
- * Date:	November 13th, 2015
- *<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>
- */
 
-//<<<<<<<<<<<<<<<<<<<<<<< myMouse >>>>>>>>>>>>>>>>>>>>
-void myMouse(int button, int state, int x, int y) {
+#include "controls/keyboard.h"
+#include "controls/mouse.h"
+#include "skybox.h"
 
-	// handles mouse clicking
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-		// nothing atm
-	}
-}
-
-//<<<<<<<<<<<<<<<<<<<<<< myKeyboard >>>>>>>>>>>>>>>>>>
-void myKeyboard(unsigned char key, int x, int y) {
-	glutIgnoreKeyRepeat(false);
-	// handle keyboard press
-	switch (key) {
-
-	case 'q':
-		std::cout << AnimateInc << std::endl;
-		AnimateInc = AnimateInc * 2.0;
-		break;
-
-	case 'a':
-		std::cout << AnimateInc << std::endl;
-		AnimateInc = AnimateInc /  2.0;
-		break;
-
-	case 'R':
-	case 'r':{
-		for(size_t i =0;i<solarSystem.size();i++){
-			solarSystem[i].p_animateInc *=2.0;
-			std::cout << solarSystem[i].p_animateInc << std::endl;
-		}
-
-		break;
-	}
-
-
-	case 's':{
-		for(size_t i =0;i<solarSystem.size();i++){
-			solarSystem[i].p_animateInc /=2.0;
-			std::cout << solarSystem[i].p_animateInc << std::endl;
-	}
-		break;
-	}
-
-	case 'S':
-		Key_s();
-		break;
-	case 27:	// Escape key
-		exit(1);
-	case 'z': {
-		viewerDistance -= viewerDistanceIncrement;
-		if (viewerDistance < minimumViewerDistance)
-			viewerDistance = minimumViewerDistance;
-		break;
-	}
-	case 'x': {
-		viewerDistance += viewerDistanceIncrement;
-		if (viewerDistance > maximumViewerDistance)
-			viewerDistance = maximumViewerDistance;
-		break;
-	}
-	case 'm': {
-		break;
-	}
-
-	}
-}
-
-// glutSpecialFunc is called below to set this function to handle
-//		all special key presses.  See glut.h for the names of
-//		special keys.
-static void mySpecialKeyFunc(int pressedKey, int x, int y) {
-	glutIgnoreKeyRepeat(false);
-	switch (pressedKey) {
-	case GLUT_KEY_RIGHT: {
-		viewerAzimuth += viewerAngleIncrement;
-		if (viewerAzimuth > 2 * PI)
-			viewerAzimuth -= 2 * PI;
-		break;
-	}
-	case GLUT_KEY_LEFT: {
-		viewerAzimuth -= viewerAngleIncrement;
-		if (viewerAzimuth < 0.0)
-			viewerAzimuth += 2 * PI;
-		break;
-	}
-	case GLUT_KEY_UP: {
-		viewerZenith -= viewerAngleIncrement;
-		if (viewerZenith < viewerAngleIncrement)
-			viewerZenith = viewerAngleIncrement;
-		break;
-	}
-	case GLUT_KEY_DOWN: {
-		viewerZenith += viewerAngleIncrement;
-		if (viewerZenith > PI - viewerAngleIncrement)
-			viewerZenith = PI - viewerAngleIncrement;
-		break;
-	}
-	}
-}
-
-static void Key_r(void) {
-	if (singleStep) {			// If ending single step mode
-		singleStep = GL_FALSE;
-		spinMode = GL_TRUE;		// Restart animation
-	} else {
-		spinMode = !spinMode;	// Toggle animation on and off.
-	}
-}
-
-static void Key_s(void) {
-	singleStep = GL_TRUE;
-	spinMode = GL_TRUE;
-}
-
-void drawSkybox(void) {
-		// Front side
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D, 11);
-
-		glPushMatrix();
-		glBegin(GL_QUADS);
-
-		glTexCoord2f(0.0, 0.0); glVertex3f( -2000.0, -2000.0, -2000.0);       // P1
-		glTexCoord2f(0.0, 5.0); glVertex3f( -2000.0,  2000.0, -2000.0);       // P2
-		glTexCoord2f(5.0, 5.0); glVertex3f(  2000.0,  2000.0, -2000.0);       // P3
-		glTexCoord2f(5.0, 0.0);	glVertex3f(  2000.0, -2000.0, -2000.0);       // P4
-
-		glEnd();
-		glPopMatrix();
-
-
-		// White side - BACK
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0, 0.0); glVertex3f(  2000.0, -2000.0, 2000.0 );
-		glTexCoord2f(0.0, 5.0); glVertex3f(  2000.0,  2000.0, 2000.0 );
-		glTexCoord2f(5.0, 5.0); glVertex3f( -2000.0,  2000.0, 2000.0 );
-		glTexCoord2f(5.0, 0.0); glVertex3f( -2000.0, -2000.0, 2000.0 );
-		glEnd();
-
-
-		// Purple side - RIGHT
-		glBegin(GL_POLYGON);
-		glTexCoord2f(0.0, 0.0); glVertex3f( 2000.0, -2000.0, -2000.0 );
-		glTexCoord2f(0.0, 5.0); glVertex3f( 2000.0,  2000.0, -2000.0 );
-		glTexCoord2f(5.0, 5.0); glVertex3f( 2000.0,  2000.0,  2000.0 );
-		glTexCoord2f(5.0, 0.0); glVertex3f( 2000.0, -2000.0,  2000.0 );
-		glEnd();
-
-		// Green side - LEFT
-		glBegin(GL_POLYGON);
-		glTexCoord2f(0.0, 0.0); glVertex3f( -2000.0, -2000.0,  2000.0 );
-		glTexCoord2f(0.0, 5.0); glVertex3f( -2000.0,  2000.0,  2000.0 );
-		glTexCoord2f(5.0, 5.0); glVertex3f( -2000.0,  2000.0, -2000.0 );
-		glTexCoord2f(5.0, 0.0); glVertex3f( -2000.0, -2000.0, -2000.0 );
-		glEnd();
-
-		// Blue side - TOP
-		glBegin(GL_POLYGON);
-		glTexCoord2f(0.0, 0.0); glVertex3f(  2000.0,  2000.0,  2000.0 );
-		glTexCoord2f(0.0, 5.0); glVertex3f(  2000.0,  2000.0, -2000.0 );
-		glTexCoord2f(5.0, 5.0); glVertex3f( -2000.0,  2000.0, -2000.0 );
-		glTexCoord2f(5.0, 0.0); glVertex3f( -2000.0,  2000.0,  2000.0 );
-		glEnd();
-
-		// Red side - BOTTOM
-		glBegin(GL_POLYGON);
-		glTexCoord2f(0.0, 0.0); glVertex3f(  2000.0, -2000.0, -2000.0 );
-		glTexCoord2f(0.0, 5.0); glVertex3f(  2000.0, -2000.0,  2000.0 );
-		glTexCoord2f(5.0, 5.0); glVertex3f( -2000.0, -2000.0,  2000.0 );
-		glTexCoord2f(5.0, 0.0); glVertex3f( -2000.0, -2000.0, -2000.0 );
-		glEnd();
-}
 
 //<<<<<<<<<<<<<<<<<<<<<<< myDisplay >>>>>>>>>>>>>>>>>
 void myDisplay(void) {
@@ -330,22 +69,24 @@ void myDisplay(void) {
 	glLoadIdentity();
 	gluPerspective(60.0, WIDTH / HEIGHT, 0.2, 4000.0);
 	// Clear the rendering window
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
-	// Clear the current matrix (Modelview)
 	glLoadIdentity();
 
+	//if followPlanet was selected, focus on that planet
 	if (followPlanet) {
 		position::Position p = solarSystem[planetNum].getPosition();
 		gluLookAt(
-				camera[0]+((solarSystem[planetNum].p_distance+viewerDistance)*cos(p.angle)),
-				camera[1],
-				camera[2]-((solarSystem[planetNum].p_distance+viewerDistance)*sin(p.angle)),
-				lookAtPosition[0],
-				lookAtPosition[1],
-				lookAtPosition[2],
-				0.0, 1.0, 0);
-	} else {
+				camera[0]
+						+ ((solarSystem[planetNum].p_distance + viewerDistance)
+								* cos(p.angle)), camera[1],
+				camera[2]
+						- ((solarSystem[planetNum].p_distance + viewerDistance)
+								* sin(p.angle)), lookAtPosition[0],
+				lookAtPosition[1], lookAtPosition[2], 0.0, 1.0, 0);
+	}
+	//default camera view
+	else {
 		gluLookAt(
 				lookAtPosition[0]
 						+ viewerDistance * sin(viewerZenith)
@@ -357,10 +98,9 @@ void myDisplay(void) {
 				lookAtPosition[1], lookAtPosition[2], 0.0, 1.0, 0.020);
 	}
 
-	// Rotate the plane of the elliptic
-	// (rotate the model's plane about the x axis by fifteen degrees)
-		glRotatef(0.0, 1.0, 0.0, 0.0);
+	glRotatef(0.0, 1.0, 0.0, 0.0);
 
+	//loop through the solar system and render it
 	for (size_t t = 0; t < solarSystem.size(); ++t) {
 		glEnable(GL_TEXTURE_2D);
 		if (t == 0) {
@@ -378,19 +118,15 @@ void myDisplay(void) {
 	drawSkybox();
 	glDisable(GL_TEXTURE_2D);
 
-	// Flush the pipeline, and swap the buffers
 	glDisable(GL_LIGHTING);
 	glFlush();
 	glutSwapBuffers();
 
-	if (singleStep) {
-		spinMode = GL_FALSE;
-	}
-
-	glutPostRedisplay();		// Request a re-draw for animation purposes
+	glutPostRedisplay(); // Request a re-draw for animation purposes
 
 }
 
+//initialize light matrices and pass it to openGL
 void initLights() {
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat mat_shininess[] = { 50.0 };
@@ -409,25 +145,29 @@ void initLights() {
 
 //<<<<<<<<<<<<<<<<<<<<<<< myInit >>>>>>>>>>>>>>>>>>>>
 void myInit(void) {
+	//create planet objects with their data
 	sun = planet::Planet(1, 10.0);
 	mercury = planet::Planet(doyMercury, hodMercury, daysMercury, hoursMercury,
-			distanceMercury, moonsMercury, sizeMercury, AnimateInc, yAngle, 2, 12);
+			distanceMercury, moonsMercury, sizeMercury, AnimateInc,  2,
+			12);
 	venus = planet::Planet(doyVenus, hodVenus, daysVenus, hoursVenus,
-			distanceVenus, moonsVenus, sizeVenus, AnimateInc, yAngle, 3, 12);
+			distanceVenus, moonsVenus, sizeVenus, AnimateInc,  3, 12);
 	earth = planet::Planet(doyEarth, hodEarth, daysEarth, hoursEarth,
-			distanceEarth, moonsEarth, sizeEarth, AnimateInc, yAngle, 4, 12);
+			distanceEarth, moonsEarth, sizeEarth, AnimateInc,  4, 12);
 	mars = planet::Planet(doyMars, hodMars, daysMars, hoursMars, distanceMars,
-			moonsMars, sizeMars, AnimateInc, yAngle, 5, 12);
+			moonsMars, sizeMars, AnimateInc,  5, 12);
 	jupiter = planet::Planet(doyJupiter, hodJupiter, daysJupiter, hoursJupiter,
-			distanceJupiter, moonsJupiter, sizeJupiter, AnimateInc, yAngle, 6, 12);
+			distanceJupiter, moonsJupiter, sizeJupiter, AnimateInc,  6,
+			12);
 	saturn = planet::Planet(doySaturn, hodSaturn, daysSaturn, hoursSaturn,
-			distanceSaturn, moonsSaturn, sizeSaturn, AnimateInc, yAngle, 7, 12);
+			distanceSaturn, moonsSaturn, sizeSaturn, AnimateInc,  7, 12);
 	uranus = planet::Planet(doyUranus, hodUranus, daysUranus, hoursUranus,
-			distanceUranus, moonsUranus, sizeUranus, AnimateInc, yAngle, 8, 12);
+			distanceUranus, moonsUranus, sizeUranus, AnimateInc,  8, 12);
 	neptune = planet::Planet(doyNeptune, hodNeptune, daysNeptune, hoursNeptune,
-			distanceNeptune, moonsNeptune, sizeNeptune, AnimateInc, yAngle, 9, 12);
+			distanceNeptune, moonsNeptune, sizeNeptune, AnimateInc,  9,
+			12);
 	pluto = planet::Planet(doyPluto, hodPluto, daysPluto, hoursPluto,
-			distancePluto, moonsPluto, sizePluto, AnimateInc, yAngle, 10, 12);
+			distancePluto, moonsPluto, sizePluto, AnimateInc,  10, 12);
 
 	solarSystem.push_back(sun);
 	solarSystem.push_back(mercury);
@@ -440,6 +180,7 @@ void myInit(void) {
 	solarSystem.push_back(neptune);
 	solarSystem.push_back(pluto);
 
+	//read texture files and set textures
 	pix[1].parseFile("images/sun.txt");
 	pix[1].setTexture(1); // create texture
 
@@ -496,204 +237,13 @@ static void ResizeWindow(int w, int h) {
 	glViewport(0, 0, w, h);	// View port uses whole window
 	aspectRatio = (float) w / (float) h;
 
-	// Set up the projection view matrix (not very well!)
+	// Set up the projection view matrix
 	glMatrixMode( GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(60.0, aspectRatio, 1.0, 30.0);
 
 	// Select the Modelview matrix
 	glMatrixMode( GL_MODELVIEW);
-}
-
-void spinner(void) { // alter angles by small amount
-	xAngle += xSpeed;
-	yAngle += ySpeed;
-	myDisplay();
-}
-
-void mainMenu(GLint menuOption) {
-	switch (menuOption) {
-	case 1: {
-		// Reset Camera
-
-
-	}
-		break;
-	case 2:
-		// Exit Program
-		exit(0);
-	}
-	glutPostRedisplay();
-}
-
-void PlanetMenu(GLint transOption) {
-	followPlanet = true;
-	switch (transOption) {
-	case 1: {
-		// Select Mercury
-		std::cout << "Mercury" << std::endl;
-		planetNum = 1;
-		viewerDistance = 10.0;
-	}
-		break;
-	case 2: {
-		// Select Venus
-		std::cout << "Venus" << std::endl;
-		planetNum = 2;
-		viewerDistance = 10.0;
-	}
-		break;
-	case 3: {
-		// Select Earth
-		std::cout << "Earth" << std::endl;
-		planetNum = 3;
-		viewerDistance = 10.0;
-	}
-		break;
-	case 4: {
-		// Select Mars
-		std::cout << "Mars" << std::endl;
-		planetNum = 4;
-		viewerDistance = 10.0;
-	}
-		break;
-	case 5: {
-		// Select Jupiter
-		std::cout << "Jupiter" << std::endl;
-		planetNum = 5;
-		viewerDistance = 60.0;
-	}
-		break;
-	case 6: {
-		// Select Saturn
-		std::cout << "Saturn" << std::endl;
-		planetNum = 6;
-		viewerDistance = 60.0;
-	}
-		break;
-	case 7: {
-		// Select Uranus
-		std::cout << "Uranus" << std::endl;
-		planetNum = 7;
-		viewerDistance = 60.0;
-	}
-		break;
-	case 8: {
-		// Neptune
-		std::cout << "Neptune" << std::endl;
-		planetNum = 8;
-		viewerDistance = 60.0;
-	}
-		break;
-	case 9: {
-		// Select Pluto
-		std::cout << "Pluto" << std::endl;
-		planetNum = 9;
-		viewerDistance = 10.0;
-	}
-		break;
-	case 10: {
-		// Reset
-		std::cout << "Reset" << std::endl;
-		planetNum = 0;
-		viewerDistance = 100;
-		viewerZenith = PI / 2.0;
-		followPlanet = false;
-	}
-		break;
-	}
-	glutPostRedisplay();
-}
-
-void SectionMenu(GLint transOption) {
-	switch (transOption) {
-	case 1: {
-		// Select Inner
-
-		std::cout << "Inner" << std::endl;
-		solarSystem[1].p_size = sizeMercury;
-		solarSystem[2].p_size = sizeVenus;
-		solarSystem[3].p_size = sizeEarth;
-		solarSystem[4].p_size = sizeMars;
-		solarSystem[5].p_size = 0.0;
-		solarSystem[6].p_size = 0.0;
-		solarSystem[7].p_size = 0.0;
-		solarSystem[8].p_size = 0.0;
-		solarSystem[9].p_size = 0.0;
-
-	}
-		break;
-	case 2: {
-		// Select Outer
-		if (solarSystem[5].p_distance>78 ){
-			for(size_t i =5;i<solarSystem.size();i++){
-				solarSystem[i].p_distance /=2.0;
-				std::cout << solarSystem[i].p_distance << std::endl;
-			}
-		}
-		std::cout << "Outer" << std::endl;
-		solarSystem[1].p_size = 0.0;
-		solarSystem[2].p_size = 0.0;
-		solarSystem[3].p_size = 0.0;
-		solarSystem[4].p_size = 0.0;
-		solarSystem[5].p_size = sizeJupiter;
-		solarSystem[6].p_size = sizeSaturn;
-		solarSystem[7].p_size = sizeNeptune;
-		solarSystem[8].p_size = sizeUranus;
-		solarSystem[9].p_size = sizePluto;
-
-	}
-		break;
-	case 3: {
-		// Select Entire
-		if (solarSystem[5].p_distance < 156){
-			for(size_t i =5;i<solarSystem.size();i++){
-					solarSystem[i].p_distance *=2.0;
-					std::cout << solarSystem[i].p_distance << std::endl;
-				}
-		}
-		std::cout << "Entire" << std::endl;
-		solarSystem[1].p_size = sizeMercury;
-		solarSystem[2].p_size = sizeVenus;
-		solarSystem[3].p_size = sizeEarth;
-		solarSystem[4].p_size = sizeMars;
-		solarSystem[5].p_size = sizeJupiter;
-		solarSystem[6].p_size = sizeSaturn;
-		solarSystem[7].p_size = sizeNeptune;
-		solarSystem[8].p_size = sizeUranus;
-		solarSystem[9].p_size = sizePluto;
-
-	}
-	}
-	glutPostRedisplay();
-}
-
-void myMenu() {
-	GLint planet_Menu, section_Menu, main_Menu;
-
-	planet_Menu = glutCreateMenu(PlanetMenu);
-	glutAddMenuEntry(" Mercury ", 1);
-	glutAddMenuEntry(" Venus ", 2);
-	glutAddMenuEntry(" Earth ", 3);
-	glutAddMenuEntry(" Mars ", 4);
-	glutAddMenuEntry(" Jupiter ", 5);
-	glutAddMenuEntry(" Saturn ", 6);
-	glutAddMenuEntry(" Uranus ", 7);
-	glutAddMenuEntry(" Neptune ", 8);
-	glutAddMenuEntry(" Pluto ", 9);
-	glutAddMenuEntry(" Unfollow ", 10);
-
-	section_Menu = glutCreateMenu(SectionMenu);
-	glutAddMenuEntry(" Inner ", 1);
-	glutAddMenuEntry(" Outer ", 2);
-	glutAddMenuEntry(" Full ", 3);
-
-	glutCreateMenu(mainMenu); // Main pop-up menu
-	glutAddSubMenu(" Planets ", planet_Menu);
-	glutAddSubMenu(" Sections ", section_Menu);
-	glutAddMenuEntry(" Reset Camera ", 1);
-	glutAddMenuEntry(" Quit ", 2);
-
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<< main >>>>>>>>>>>>>>>>>>>>>>
@@ -725,8 +275,6 @@ int main(int argc, char** argv) {
 	glutKeyboardFunc(myKeyboard);
 	// set view port
 	glViewport(0, 0, 2028, 1536);
-
-	glutIdleFunc(spinner);
 
 	// Call myInit function
 	myInit();
