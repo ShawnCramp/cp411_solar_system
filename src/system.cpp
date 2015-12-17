@@ -31,8 +31,6 @@
 #define WIDTH 1024
 #define HEIGHT 768
 
-static GLenum spinMode = GL_TRUE;
-static GLenum singleStep = GL_FALSE;
 static float AnimateInc = 2.0;  // Time step for animation (hours)
 
 float viewerDistance = initialViewerDistance;

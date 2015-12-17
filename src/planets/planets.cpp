@@ -5,7 +5,6 @@
  *      Author: don
  */
 
-#include <map>
 #include <string>
 #include <math.h>
 #include <gl/Gl.h>
