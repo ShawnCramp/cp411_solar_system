@@ -10,11 +10,6 @@
 
 void mainMenu(GLint menuOption) {
 	switch (menuOption) {
-	case 1: {
-		// Reset Camera
-
-	}
-		break;
 	case 2:
 		// Exit Program
 		exit(0);
@@ -163,7 +158,7 @@ void SectionMenu(GLint transOption) {
 	}
 	glutPostRedisplay();
 }
-
+//Create the right click menu
 void myMenu() {
 	GLint planet_Menu, section_Menu;
 
@@ -187,7 +182,6 @@ void myMenu() {
 	glutCreateMenu(mainMenu); // Main pop-up menu
 	glutAddSubMenu(" Planets ", planet_Menu);
 	glutAddSubMenu(" Sections ", section_Menu);
-	glutAddMenuEntry(" Reset Camera ", 1);
 	glutAddMenuEntry(" Quit ", 2);
 
 }

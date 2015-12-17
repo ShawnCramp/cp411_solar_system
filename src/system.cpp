@@ -1,3 +1,20 @@
+/**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
+ * Author:	Shawn Cramp
+ * ID:		111007290
+ * Author: 	Edward Huang
+ * ID:		100949380
+ * Author: 	Don Miguel
+ * ID:		120760850
+ * Author: 	Nick Hare
+ * ID:		120585990
+ *
+ * Description:	CP411 Final Assignment
+ * 		Solar System
+ *
+ * Date:	December 17th, 2015
+ *<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>
+ */
+
 #include <windows.h>
 #include <stdio.h>
 #include <gl/Gl.h>
@@ -16,8 +33,6 @@
 
 static GLenum spinMode = GL_TRUE;
 static GLenum singleStep = GL_FALSE;
-// These three variables control the animation's state and speed.
-float xSpeed = 1.0, ySpeed = 14.0, xAngle = 0.0, yAngle = 23.5;
 static float AnimateInc = 2.0;  // Time step for animation (hours)
 
 float viewerDistance = initialViewerDistance;
@@ -45,113 +60,8 @@ int planetNum = 0;
 
 #include "controls/keyboard.h"
 #include "controls/mouse.h"
-/**<<<<<<<<<<<<< CP411 Final Assignment >>>>>>>>>>>>>>
- * Author:	Shawn Cramp
- * ID:		111007290
- * Author: 	Edward Huang
- * ID:		100949380
- * Author: 	Don Miguel
- * ID:		120760850
- * Author: 	Nick Hare
- * ID:		120585990
- *
- * Description:	CP411 Final Assignment
- * 		Solar System
- *
- * Date:	November 13th, 2015
- *<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>
- */
+#include "skybox.h"
 
-//<<<<<<<<<<<<<<<<<<<<<<< myMouse >>>>>>>>>>>>>>>>>>>>
-void myMouse(int button, int state, int x, int y) {
-
-	// handles mouse clicking
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-		// nothing atm
-	}
-}
-
-void drawSkybox(void) {
-	// Front side
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glBindTexture(GL_TEXTURE_2D, 11);
-
-	glPushMatrix();
-	glBegin(GL_QUADS);
-
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(-2000.0, -2000.0, -2000.0);       // P1
-	glTexCoord2f(0.0, 5.0);
-	glVertex3f(-2000.0, 2000.0, -2000.0);       // P2
-	glTexCoord2f(5.0, 5.0);
-	glVertex3f(2000.0, 2000.0, -2000.0);       // P3
-	glTexCoord2f(5.0, 0.0);
-	glVertex3f(2000.0, -2000.0, -2000.0);       // P4
-
-	glEnd();
-	glPopMatrix();
-
-	// White side - BACK
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(2000.0, -2000.0, 2000.0);
-	glTexCoord2f(0.0, 5.0);
-	glVertex3f(2000.0, 2000.0, 2000.0);
-	glTexCoord2f(5.0, 5.0);
-	glVertex3f(-2000.0, 2000.0, 2000.0);
-	glTexCoord2f(5.0, 0.0);
-	glVertex3f(-2000.0, -2000.0, 2000.0);
-	glEnd();
-
-	// Purple side - RIGHT
-	glBegin(GL_POLYGON);
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(2000.0, -2000.0, -2000.0);
-	glTexCoord2f(0.0, 5.0);
-	glVertex3f(2000.0, 2000.0, -2000.0);
-	glTexCoord2f(5.0, 5.0);
-	glVertex3f(2000.0, 2000.0, 2000.0);
-	glTexCoord2f(5.0, 0.0);
-	glVertex3f(2000.0, -2000.0, 2000.0);
-	glEnd();
-
-	// Green side - LEFT
-	glBegin(GL_POLYGON);
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(-2000.0, -2000.0, 2000.0);
-	glTexCoord2f(0.0, 5.0);
-	glVertex3f(-2000.0, 2000.0, 2000.0);
-	glTexCoord2f(5.0, 5.0);
-	glVertex3f(-2000.0, 2000.0, -2000.0);
-	glTexCoord2f(5.0, 0.0);
-	glVertex3f(-2000.0, -2000.0, -2000.0);
-	glEnd();
-
-	// Blue side - TOP
-	glBegin(GL_POLYGON);
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(2000.0, 2000.0, 2000.0);
-	glTexCoord2f(0.0, 5.0);
-	glVertex3f(2000.0, 2000.0, -2000.0);
-	glTexCoord2f(5.0, 5.0);
-	glVertex3f(-2000.0, 2000.0, -2000.0);
-	glTexCoord2f(5.0, 0.0);
-	glVertex3f(-2000.0, 2000.0, 2000.0);
-	glEnd();
-
-	// Red side - BOTTOM
-	glBegin(GL_POLYGON);
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(2000.0, -2000.0, -2000.0);
-	glTexCoord2f(0.0, 5.0);
-	glVertex3f(2000.0, -2000.0, 2000.0);
-	glTexCoord2f(5.0, 5.0);
-	glVertex3f(-2000.0, -2000.0, 2000.0);
-	glTexCoord2f(5.0, 0.0);
-	glVertex3f(-2000.0, -2000.0, -2000.0);
-	glEnd();
-}
 
 //<<<<<<<<<<<<<<<<<<<<<<< myDisplay >>>>>>>>>>>>>>>>>
 void myDisplay(void) {
@@ -161,11 +71,11 @@ void myDisplay(void) {
 	glLoadIdentity();
 	gluPerspective(60.0, WIDTH / HEIGHT, 0.2, 4000.0);
 	// Clear the rendering window
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
-	// Clear the current matrix (Modelview)
 	glLoadIdentity();
 
+	//if followPlanet was selected, focus on that planet
 	if (followPlanet) {
 		position::Position p = solarSystem[planetNum].getPosition();
 		gluLookAt(
@@ -176,7 +86,9 @@ void myDisplay(void) {
 						- ((solarSystem[planetNum].p_distance + viewerDistance)
 								* sin(p.angle)), lookAtPosition[0],
 				lookAtPosition[1], lookAtPosition[2], 0.0, 1.0, 0);
-	} else {
+	}
+	//default camera view
+	else {
 		gluLookAt(
 				lookAtPosition[0]
 						+ viewerDistance * sin(viewerZenith)
@@ -188,10 +100,9 @@ void myDisplay(void) {
 				lookAtPosition[1], lookAtPosition[2], 0.0, 1.0, 0.020);
 	}
 
-	// Rotate the plane of the elliptic
-	// (rotate the model's plane about the x axis by fifteen degrees)
 	glRotatef(0.0, 1.0, 0.0, 0.0);
 
+	//loop through the solar system and render it
 	for (size_t t = 0; t < solarSystem.size(); ++t) {
 		glEnable(GL_TEXTURE_2D);
 		if (t == 0) {
@@ -209,19 +120,15 @@ void myDisplay(void) {
 	drawSkybox();
 	glDisable(GL_TEXTURE_2D);
 
-	// Flush the pipeline, and swap the buffers
 	glDisable(GL_LIGHTING);
 	glFlush();
 	glutSwapBuffers();
 
-	if (singleStep) {
-		spinMode = GL_FALSE;
-	}
-
-	glutPostRedisplay();		// Request a re-draw for animation purposes
+	glutPostRedisplay(); // Request a re-draw for animation purposes
 
 }
 
+//initialize light matrices and pass it to openGL
 void initLights() {
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat mat_shininess[] = { 50.0 };
@@ -240,28 +147,29 @@ void initLights() {
 
 //<<<<<<<<<<<<<<<<<<<<<<< myInit >>>>>>>>>>>>>>>>>>>>
 void myInit(void) {
+	//create planet objects with their data
 	sun = planet::Planet(1, 10.0);
 	mercury = planet::Planet(doyMercury, hodMercury, daysMercury, hoursMercury,
-			distanceMercury, moonsMercury, sizeMercury, AnimateInc, yAngle, 2,
+			distanceMercury, moonsMercury, sizeMercury, AnimateInc,  2,
 			12);
 	venus = planet::Planet(doyVenus, hodVenus, daysVenus, hoursVenus,
-			distanceVenus, moonsVenus, sizeVenus, AnimateInc, yAngle, 3, 12);
+			distanceVenus, moonsVenus, sizeVenus, AnimateInc,  3, 12);
 	earth = planet::Planet(doyEarth, hodEarth, daysEarth, hoursEarth,
-			distanceEarth, moonsEarth, sizeEarth, AnimateInc, yAngle, 4, 12);
+			distanceEarth, moonsEarth, sizeEarth, AnimateInc,  4, 12);
 	mars = planet::Planet(doyMars, hodMars, daysMars, hoursMars, distanceMars,
-			moonsMars, sizeMars, AnimateInc, yAngle, 5, 12);
+			moonsMars, sizeMars, AnimateInc,  5, 12);
 	jupiter = planet::Planet(doyJupiter, hodJupiter, daysJupiter, hoursJupiter,
-			distanceJupiter, moonsJupiter, sizeJupiter, AnimateInc, yAngle, 6,
+			distanceJupiter, moonsJupiter, sizeJupiter, AnimateInc,  6,
 			12);
 	saturn = planet::Planet(doySaturn, hodSaturn, daysSaturn, hoursSaturn,
-			distanceSaturn, moonsSaturn, sizeSaturn, AnimateInc, yAngle, 7, 12);
+			distanceSaturn, moonsSaturn, sizeSaturn, AnimateInc,  7, 12);
 	uranus = planet::Planet(doyUranus, hodUranus, daysUranus, hoursUranus,
-			distanceUranus, moonsUranus, sizeUranus, AnimateInc, yAngle, 8, 12);
+			distanceUranus, moonsUranus, sizeUranus, AnimateInc,  8, 12);
 	neptune = planet::Planet(doyNeptune, hodNeptune, daysNeptune, hoursNeptune,
-			distanceNeptune, moonsNeptune, sizeNeptune, AnimateInc, yAngle, 9,
+			distanceNeptune, moonsNeptune, sizeNeptune, AnimateInc,  9,
 			12);
 	pluto = planet::Planet(doyPluto, hodPluto, daysPluto, hoursPluto,
-			distancePluto, moonsPluto, sizePluto, AnimateInc, yAngle, 10, 12);
+			distancePluto, moonsPluto, sizePluto, AnimateInc,  10, 12);
 
 	solarSystem.push_back(sun);
 	solarSystem.push_back(mercury);
@@ -274,6 +182,7 @@ void myInit(void) {
 	solarSystem.push_back(neptune);
 	solarSystem.push_back(pluto);
 
+	//read texture files and set textures
 	pix[1].parseFile("images/sun.txt");
 	pix[1].setTexture(1); // create texture
 
@@ -330,19 +239,13 @@ static void ResizeWindow(int w, int h) {
 	glViewport(0, 0, w, h);	// View port uses whole window
 	aspectRatio = (float) w / (float) h;
 
-	// Set up the projection view matrix (not very well!)
+	// Set up the projection view matrix
 	glMatrixMode( GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(60.0, aspectRatio, 1.0, 30.0);
 
 	// Select the Modelview matrix
 	glMatrixMode( GL_MODELVIEW);
-}
-
-void spinner(void) { // alter angles by small amount
-	xAngle += xSpeed;
-	yAngle += ySpeed;
-	myDisplay();
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<< main >>>>>>>>>>>>>>>>>>>>>>
@@ -374,8 +277,6 @@ int main(int argc, char** argv) {
 	glutKeyboardFunc(myKeyboard);
 	// set view port
 	glViewport(0, 0, 2028, 1536);
-
-	glutIdleFunc(spinner);
 
 	// Call myInit function
 	myInit();

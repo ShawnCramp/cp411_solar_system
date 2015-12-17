@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 using namespace std;
-class RGB { // holds a color triple, each with 256 possible intensities
+class RGB { // holds a color rgb, each with 256 possible intensities
 public:
 	unsigned char r, g, b;
 };
@@ -64,6 +64,7 @@ void RGBpixmap::parseFile(string filename) {
 						g = t;
 					} else if (columns % 3 == 0) {
 						b = t;
+						//store the rgb values
 						pixel[counter].r = r;
 						pixel[counter].g = g;
 						pixel[counter++].b = b;

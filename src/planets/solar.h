@@ -10,7 +10,6 @@
 
 
 void OpenGLInit(void);
-static void Key_s(void );
 static void ResizeWindow(int w, int h);
 
 
